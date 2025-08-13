@@ -97,6 +97,7 @@ public void onTestFailure(ITestResult result) {
     public void onTestSuccess(ITestResult arg0) {
         System.out.println("✅ Test Passed: " + arg0.getName());
     }
+    
 
 
 }

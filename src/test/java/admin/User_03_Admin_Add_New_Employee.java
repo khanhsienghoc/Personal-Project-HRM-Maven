@@ -11,10 +11,7 @@ import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.testng.AllureTestNg;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import pageObject.*;
 import reportConfigs.AllureTestListener;
 import ultilities.DataUltilities;
@@ -232,7 +229,10 @@ public class User_03_Admin_Add_New_Employee extends BaseTest {
         boolean isExist = employeeDAo.isEmployeeExist(employeeID);
         Assertions.assertTrue(isExist, "Employee record does NOT exist in the database!");
     }
-
+    @AfterClass(alwaysRun = true)
+    public void afterClass(){
+        closeBrowserAndDriver();
+    }
     private WebDriver driver;
     private LoginPageObject loginPage;
     private DashboardPageObject dashboardPage;

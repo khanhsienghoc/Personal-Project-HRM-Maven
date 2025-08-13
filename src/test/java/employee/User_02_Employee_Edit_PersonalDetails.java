@@ -42,7 +42,6 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
     private void initializeTestData() {
         DataUltilities fakeData = DataUltilities.getData();
 
-        // Option 1: Using constructor
         testData = new PersonalDetailsData(
                 fakeData.getFirstName(),
                 fakeData.getMiddleName(),
@@ -118,29 +117,6 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     @Test
     public void Edit_04_Employee_EditPersonalDetail(){
-//        log.info("Edit_04_Employee_EditPersonalDetail - Step_01: Input 'First Name' field with value: "+updatedFirstName);
-//         getPersonalDetails.inputToTextBoxByName(driver,"firstName",updatedFirstName);
-//
-//        log.info("Edit_04_Employee_EditPersonalDetail - Step_02: Input 'Middle Name' field with value: "+updatedMiddleName);
-//        getPersonalDetails.inputToTextBoxByName(driver,"middleName",updatedMiddleName);
-//
-//        log.info("Edit_04_Employee_EditPersonalDetail - Step_03: Input 'Last Name' field with value: "+updatedLastName);
-//        getPersonalDetails.inputToTextBoxByName(driver,"lastName",updatedLastName);
-//
-//        log.info("Edit_04_Employee_EditPersonalDetail - Step_04: Input 'Other id' field with value: "+ otherID);
-//        getPersonalDetails.inputToTextBoxByText(driver,"Other Id", otherID);
-//
-//        log.info("Edit_04_Employee_EditPersonalDetail - Step_05: Input 'License Expiry Date' field with value: "+ licenseExpiryDate);
-//        getPersonalDetails.inputToTextBoxByText(driver,"License Expiry Date", licenseExpiryDate);
-//
-//        log.info("Edit_04_Employee_EditPersonalDetail - Step_06: Choose 'Nationality' dropdown with value: "+ nationality);
-//        getPersonalDetails.selectValueInDropdownByText(driver, "Nationality",nationality);
-//
-//        log.info("Edit_04_Employee_EditPersonalDetail - Step_07: Choose 'Marital Status' dropdown with value: "+ maritalStatus);
-//        getPersonalDetails.selectValueInDropdownByText(driver, "Marital Status",maritalStatus);
-//
-//        log.info("Edit_04_Employee_EditPersonalDetail - Step_08: Choose 'Gender' radio button with value: "+ gender);
-//        getPersonalDetails.clickToRadioButtonByText(driver, gender);
         log.info("Filling personal details form with new data");
         getPersonalDetails.fillPersonalDetailsForm(testData);
 
@@ -336,8 +312,7 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
     private LoginPageObject loginPage;
     private MyInfoPageObject myInfo;
     private PersonalDetailsPageObject getPersonalDetails;
-    private String updatedFirstName, updatedMiddleName, updatedLastName, nationality, maritalStatus, gender, bloodType, otherID, licenseExpiryDate, comment1, comment2, currentDate, updatedComment;
-    private DataUltilities fakeData;
+    private String updatedFirstName, updatedMiddleName, updatedLastName, nationality, gender, otherID, licenseExpiryDate, comment1, comment2, currentDate, updatedComment;
     private DashboardPageObject homePage;
     private PersonalDetailsData testData;
     String fileMoreThan1MB = "FileMoreThan1MB.pdf";
