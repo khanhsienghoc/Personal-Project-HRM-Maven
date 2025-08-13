@@ -5,18 +5,19 @@
         <listener class-name="reportConfigs.MethodListener"/>
         <listener class-name="reportConfigs.AllureTestListener"/>
     </listeners>
+
+    <parameter name="browser" value="chrome"/>
+    <parameter name="environment" value="test"/>
+
     <test name="Admin Tests">
-        <parameter name="browser" value="chrome"/>
-        <parameter name="environment" value="test"/>
         <classes>
             <class name="admin.User_01_Admin_Login"/>
             <class name="admin.User_02_Admin_ForgotPassword"/>
             <class name="admin.User_03_Admin_Add_New_Employee"/>
         </classes>
     </test>
+
     <test name="Employee Tests">
-        <parameter name="browser" value="chrome"/>
-        <parameter name="environment" value="test"/>
         <classes>
             <class name="common.Common_Employee_Login"/>
             <class name="employee.User_01_Employee_Login"/>
