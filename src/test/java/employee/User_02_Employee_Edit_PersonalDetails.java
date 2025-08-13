@@ -38,21 +38,6 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
         homePage = PageGeneratorManager.getDashboardPage(driver);
         initializeTestData();
 
-//        fakeData = DataUltilities.getData();
-//        updatedFirstName = fakeData.getFirstName();
-//        updatedMiddleName = fakeData.getMiddleName();
-//        updatedLastName = fakeData.getLastName();
-//        otherID = fakeData.getOtherID();
-//        licenseExpiryDate = fakeData.getDate();
-//        nationality = fakeData.getNationality();
-//        maritalStatus = fakeData.getMaritalStatus();
-//        gender = fakeData.getGender();
-//        bloodType = fakeData.getBloodType();
-//        comment1 = fakeData.getComment();
-//        comment2 = fakeData.getComment();
-//        currentDate = fakeData.getCurrentDate();
-//        updatedComment = fakeData.getComment();
-//        nationality = fakeData.getNationality();
     }
     private void initializeTestData() {
         DataUltilities fakeData = DataUltilities.getData();
