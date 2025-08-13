@@ -1,1 +1,0 @@
-{"uuid":"c65d4554-8296-496a-ad20-9f11d6fe269e","name":"Admin- Login Test Suite","children":["863ead53-1b5a-4b4f-9015-9fd5d9569390"],"befores":[{"name":"initBeforeSuite","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1755059371769,"stop":1755059371786}],"afters":[],"start":1755059371739,"stop":1755059422444}

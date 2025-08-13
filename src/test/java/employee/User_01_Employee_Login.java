@@ -23,7 +23,7 @@ public class User_01_Employee_Login extends BaseTest {
     @Parameters({"browser","environment"})
     @BeforeClass
     public void beforeClass(String browserName, String environmentName){
-        log.info("Pre-conditon: Open Browser "+ browserName + " and navigate to the URL");
+        log.info("Pre-condition: Open Browser "+ browserName + " and navigate to the URL");
         driver = getBrowserDriver(browserName,environmentName);
         loginPage = PageGeneratorManager.getLoginPage(driver);
         fakeData = DataUltilities.getData();
