@@ -27,16 +27,9 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
         log.info("Pre-condition: Open Browser "+ browserName + " and navigate to the URL in " + environmentName + " environment");
         log.info("Pre-condition: Open Browser "+ browserName + " and navigate to the URL");
         driver = getBrowserDriver(browserName, environmentName);
-
-        log.info("Pre-condition: Input username with value: " + Common_Employee_Login.username);
         loginPage = PageGeneratorManager.getLoginPage(driver);
-        loginPage.inputToTextBoxByText(driver, "Username", Common_Employee_Login.username);
-
-        log.info("Pre-condition: Input password with value: " + Common_Employee_Login.password);
-        loginPage.inputToTextBoxByText(driver, "Password", Common_Employee_Login.password);
-
-        log.info("Pre-condition: Click Login");
-        loginPage.clickToLoginButton();
+        log.info("Pre-condition: Input user name and password and click Login");
+        loginPage.login(Common_Employee_Login.username, Common_Employee_Login.password);
         homePage = PageGeneratorManager.getDashboardPage(driver);
         initializeTestData();
 
@@ -106,11 +99,12 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
     @Test
     public void Edit_03_Employee_DisabledFields(){
         List<String> fields = Arrays.asList(new String[]{"Employee Id", "Driver's License Number",  "Date of Birth"});
+        int i = 1;
         for (String field : fields){
-            log.info("Edit_03_Employee_DisabledFields - Step_01: Verify "+ field +"field is disabled");
+            log.info("Edit_03_Employee_DisabledFields - Step_0"+i+": Verify "+ field +"field is disabled");
             Assertions.assertFalse(getPersonalDetails.isTextboxEnabledByText(driver,"Employee Id"),
                     field + " field should be disabled");
-        }
+        } i++;
     }
     @Description("Verify employee user can edit Personal Details")
     @Severity(SeverityLevel.NORMAL)
@@ -126,14 +120,19 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
         Assertions.assertTrue(getPersonalDetails.isSuccessPopUpShow(driver),
                 "Success popup should be displayed after saving");
 
-        log.info("Edit_04_Employee_EditPersonalDetail - Step_11: Verify the First Name textbox show the latest value: " + updatedFirstName);
-        Assertions.assertEquals(updatedFirstName,getPersonalDetails.getPropertyOfTextBoxByName(driver, "value", "firstName"));
-
-        log.info("Edit_04_Employee_EditPersonalDetail - Step_12: Verify the Middle Name textbox show the latest value: " + updatedMiddleName);
-        Assertions.assertEquals(updatedMiddleName,getPersonalDetails.getPropertyOfTextBoxByName(driver, "value", "middleName"));
-
-        log.info("Edit_04_Employee_EditPersonalDetail - Step_13: Verify the Last Name textbox show the latest value: " + updatedLastName);
-        Assertions.assertEquals(updatedLastName,getPersonalDetails.getPropertyOfTextBoxByName(driver, "value", "lastName"));
+        Map<String, String> fields
+                = new HashMap<String, String>();
+        fields.put(updatedFirstName, "firstName");
+        fields.put(updatedMiddleName, "middleName");
+        fields.put(updatedLastName, "lastName");
+        int i = 13;
+        for (Map.Entry<String, String> entry : fields.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            log.info("Edit_04_Employee_EditPersonalDetail - Step_"+i+": Verify the "+ value +" textbox show the latest value: " + key);
+            Assertions.assertEquals(key,getPersonalDetails.getPropertyOfTextBoxByName(driver, "value", value));
+            i++;
+        }
 
         log.info("Edit_04_Employee_EditPersonalDetail - Step_14: Verify the Other ID textbox show the latest value: " + otherID);
         Assertions.assertEquals(otherID,getPersonalDetails.getPropertyOfTextBoxByText(driver, "value", "Other Id"));
@@ -224,17 +223,9 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
         log.info("Edit_08_Employee_EditAttachments - Step_4: Verify a success pop up show");
         Assertions.assertTrue(getPersonalDetails.isSuccessPopUpShow(driver));
 
-        log.info("Edit_08_Employee_EditAttachments - Step_5: Verify the attachment name after uploaded");
-        Assertions.assertEquals(txtFile, getPersonalDetails.getFileDescriptionByFieldAndByText(driver,"File Name",txtFile ));
+        log.info("Edit_08_Employee_EditAttachments - Step_5: Verify the attachment information after uploaded");
+        verifyAttachment(txtFile, updatedComment, currentDate, Common_Employee_Login.username);
 
-        log.info("Edit_08_Employee_EditAttachments - Step_6: Verify the attachment description after uploaded");
-        Assertions.assertEquals(updatedComment,getPersonalDetails.getFileDescriptionByFieldAndByText(driver,"Description",updatedComment));
-
-        log.info("Edit_08_Employee_EditAttachments - Step_7: Verify the attachment added in the current date: " + currentDate);
-        Assertions.assertEquals(currentDate, getPersonalDetails.getFileDescriptionByFieldAndByText(driver,"Date Added",currentDate));
-
-        log.info("Edit_08_Employee_EditAttachments - Step_8: Verify the attachment added by the employee username: " + Common_Employee_Login.username);
-        Assertions.assertEquals(Common_Employee_Login.username, getPersonalDetails.getFileDescriptionByFieldAndByText(driver,"Added By",Common_Employee_Login.username));
     }
     @Description("Verify employee can delete an attachment")
     @Severity(SeverityLevel.CRITICAL)
@@ -322,4 +313,14 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
     String jpegImage = "JpegImage.jpeg";
     String pngImage = "PngImage.png";
     String xlsxFile = "XlsxFile.xlsx";
+    private void verifyAttachment(String fileName, String description, String dateAdded, String addedBy) {
+        log.info("Verify the attachment name after uploaded");
+        Assertions.assertEquals(fileName, getPersonalDetails.getFileDescriptionByFieldAndByText(driver,"File Name", fileName));
+        log.info("Verify the attachment description after uploaded");
+        Assertions.assertEquals(description, getPersonalDetails.getFileDescriptionByFieldAndByText(driver,"Description", description));
+        log.info("Verify the attachment added in the current date: " + currentDate);
+        Assertions.assertEquals(dateAdded, getPersonalDetails.getFileDescriptionByFieldAndByText(driver,"Date Added", dateAdded));
+        log.info("Verify the attachment added by the employee username: " + Common_Employee_Login.username);
+        Assertions.assertEquals(addedBy, getPersonalDetails.getFileDescriptionByFieldAndByText(driver,"Added By", addedBy));
+    }
 }
