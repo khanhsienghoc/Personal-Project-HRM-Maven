@@ -65,7 +65,6 @@ public class BaseTest {
         }
         driver.manage().timeouts().implicitlyWait(GlobalConstants.LONG_TIMEOUT, SECONDS);
         driver.manage().window().maximize();
-//        driver.get(GlobalConstants.PORTAL_TESTING_URL);
         GlobalConstants.ENV = EnvironmentList.valueOf(envName.toUpperCase());
         String baseUrl = EnvironmentConfigManager.getInstance().getBaseUrl();
         driver.get(baseUrl);

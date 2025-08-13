@@ -3,12 +3,11 @@ package employee;
 import common.Common_Employee_Login;
 import commons.BaseTest;
 import dataObject.PersonalDetailsData;
+import io.qameta.allure.Description;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
-import io.qameta.allure.Description;
 import io.qameta.allure.testng.AllureTestNg;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
 import pageObject.*;
@@ -17,14 +16,13 @@ import ultilities.DataUltilities;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 @Listeners({AllureTestNg.class, AllureTestListener.class})
 public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
     @Parameters({"browser","environment"})
     @BeforeClass
     public void beforeClass(String browserName, String environmentName){
-        log.info("Pre-conditon: Open Browser "+ browserName + " and navigate to the URL in " + environmentName + " environment");
+        log.info("Pre-condition: Open Browser "+ browserName + " and navigate to the URL in " + environmentName + " environment");
         log.info("Pre-condition: Open Browser "+ browserName + " and navigate to the URL");
         driver = getBrowserDriver(browserName, environmentName);
 
@@ -39,7 +37,7 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
         loginPage.clickToLoginButton();
         homePage = PageGeneratorManager.getDashboardPage(driver);
         initializeTestData();
-//
+
 //        fakeData = DataUltilities.getData();
 //        updatedFirstName = fakeData.getFirstName();
 //        updatedMiddleName = fakeData.getMiddleName();

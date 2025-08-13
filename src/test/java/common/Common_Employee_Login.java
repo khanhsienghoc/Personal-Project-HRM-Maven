@@ -2,11 +2,13 @@ package common;
 
 import commons.BaseTest;
 import commons.EnvironmentConfigManager;
-import commons.GlobalConstants;
 import io.qameta.allure.testng.AllureTestNg;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Parameters;
 import pageObject.*;
 import reportConfigs.AllureTestListener;
 import ultilities.DataUltilities;
