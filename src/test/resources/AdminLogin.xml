@@ -7,7 +7,7 @@
     </listeners>
     <test name="Run on chrome">
         <parameter name="browser" value="chrome"/>
-        <parameter name="environment" value="local"></parameter>
+        <parameter name="environment" value="test"></parameter>
         <classes>
             <class name="admin.User_01_Admin_Login"/>
         </classes>
