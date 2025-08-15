@@ -27,11 +27,23 @@ public class PersonalDetailsPageObject extends BasePage {
         log.info("Filling personal details form with new data");
         log.info("Input First Name with value {}", data.getFirstName());
         inputToTextBoxByName(driver, "firstName", data.getFirstName());
+
+        log.info("Input Middle Name with value {}", data.getMiddleName());
         inputToTextBoxByName(driver, "middleName", data.getMiddleName());
+
+        log.info("Input Last Name with value {}", data.getLastName());
         inputToTextBoxByName(driver, "lastName", data.getLastName());
+
+        log.info("Input Other ID with value {}", data.getOtherID());
         inputToTextBoxByText(driver, "Other Id", data.getOtherID());
+
+        log.info("Input License Expiry Date with value {}", data.getLicenseExpiryDate());
         inputToTextBoxByText(driver, "License Expiry Date", data.getLicenseExpiryDate());
+
+        log.info("Select nationality with value {}", data.getNationality());
         selectValueInDropdownByText(driver, "Nationality", data.getNationality());
+
+        log.info("Select Martial Status with value {}", data.getNationality());
         selectValueInDropdownByText(driver, "Marital Status", data.getMaritalStatus());
         clickToRadioButtonByText(driver, data.getGender());
     }

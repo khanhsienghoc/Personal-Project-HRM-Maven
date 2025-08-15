@@ -14,10 +14,7 @@ import pageObject.*;
 import reportConfigs.AllureTestListener;
 import ultilities.DataUltilities;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Listeners({AllureTestNg.class, AllureTestListener.class})
 public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
@@ -119,32 +116,34 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
         log.info("Edit_04_Employee_EditPersonalDetail - Step_10: Verify a success pop up show");
         Assertions.assertTrue(getPersonalDetails.isSuccessPopUpShow(driver),
                 "Success popup should be displayed after saving");
-
-        Map<String, String> fields
-                = new HashMap<String, String>();
-        fields.put(updatedFirstName, "firstName");
-        fields.put(updatedMiddleName, "middleName");
-        fields.put(updatedLastName, "lastName");
-        int i = 13;
+        Map<String, String> fields = new LinkedHashMap<>();
+        fields.put("firstName", testData.getFirstName());
+        fields.put("middleName", testData.getMiddleName());
+        fields.put("lastName",testData.getLastName() );
+        fields.put("Other Id", testData.getOtherID());
+        fields.put("License Expiry Date", testData.getLicenseExpiryDate());
+        int i = 11;
         for (Map.Entry<String, String> entry : fields.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            log.info("Edit_04_Employee_EditPersonalDetail - Step_"+i+": Verify the "+ value +" textbox show the latest value: " + key);
-            Assertions.assertEquals(key,getPersonalDetails.getPropertyOfTextBoxByName(driver, "value", value));
+            String fieldName = entry.getKey();
+            String expectedValue = entry.getValue();
+
+            if (!fieldName.equals("Other Id") && !fieldName.equals("License Expiry Date")) {
+                log.info("Edit_04_Employee_EditPersonalDetail - Step_" + i + ": Verify the " + fieldName + " textbox shows the latest value: " + expectedValue);
+                Assertions.assertEquals(expectedValue, getPersonalDetails.getPropertyOfTextBoxByName(driver, "value", fieldName)
+                );
+            } else {
+                log.info("Edit_04_Employee_EditPersonalDetail - Step_" + i + ": Verify the " + fieldName + " textbox shows the latest value: " + expectedValue);
+                Assertions.assertEquals(expectedValue, getPersonalDetails.getPropertyOfTextBoxByText(driver, "value", fieldName)
+                );
+            }
             i++;
         }
 
-        log.info("Edit_04_Employee_EditPersonalDetail - Step_14: Verify the Other ID textbox show the latest value: " + otherID);
-        Assertions.assertEquals(otherID,getPersonalDetails.getPropertyOfTextBoxByText(driver, "value", "Other Id"));
+        log.info("Edit_04_Employee_EditPersonalDetail - Step_16: Verify the Nationality dropdown show the latest value: " + testData.getNationality());
+        Assertions.assertEquals(testData.getNationality(),getPersonalDetails.getChosenValueFromNationalityDropdownByText("Nationality"));
 
-        log.info("Edit_04_Employee_EditPersonalDetail - Step_15: Verify the License Expiry Date textbox show the latest value: " + licenseExpiryDate);
-        Assertions.assertEquals(licenseExpiryDate,getPersonalDetails.getPropertyOfTextBoxByText(driver, "value", "License Expiry Date"));
-
-        log.info("Edit_04_Employee_EditPersonalDetail - Step_16: Verify the Nationality dropdown show the latest value: " + nationality);
-        Assertions.assertEquals(nationality,getPersonalDetails.getChosenValueFromNationalityDropdownByText("Nationality"));
-
-        log.info("Edit_04_Employee_EditPersonalDetail - Step_17: Verify the Gender radio button checked the latest value: " + gender);
-        Assertions.assertTrue(getPersonalDetails.isRadioButtonSelectedByText(driver, gender));
+        log.info("Edit_04_Employee_EditPersonalDetail - Step_17: Verify the Gender radio button checked the latest value: " + testData.getGender());
+        Assertions.assertTrue(getPersonalDetails.isRadioButtonSelectedByText(driver, testData.getGender()));
     }
     @Description("Verify employee user can edit Custom Fields")
     @Severity(SeverityLevel.NORMAL)
@@ -302,7 +301,7 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
     private LoginPageObject loginPage;
     private MyInfoPageObject myInfo;
     private PersonalDetailsPageObject getPersonalDetails;
-    private String updatedFirstName, updatedMiddleName, updatedLastName, nationality, gender, otherID, licenseExpiryDate, comment1, comment2, currentDate, updatedComment;
+    private String comment1, comment2, currentDate, updatedComment;
     private DashboardPageObject homePage;
     private PersonalDetailsData testData;
     String fileMoreThan1MB = "FileMoreThan1MB.pdf";
@@ -313,14 +312,15 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
     String jpegImage = "JpegImage.jpeg";
     String pngImage = "PngImage.png";
     String xlsxFile = "XlsxFile.xlsx";
+
     private void verifyAttachment(String fileName, String description, String dateAdded, String addedBy) {
         log.info("Verify the attachment name after uploaded");
-        Assertions.assertEquals(fileName, getPersonalDetails.getFileDescriptionByFieldAndByText(driver,"File Name", fileName));
+        Assertions.assertEquals(fileName, getPersonalDetails.getFileDescriptionByFieldAndByText(driver, "File Name", fileName));
         log.info("Verify the attachment description after uploaded");
-        Assertions.assertEquals(description, getPersonalDetails.getFileDescriptionByFieldAndByText(driver,"Description", description));
+        Assertions.assertEquals(description, getPersonalDetails.getFileDescriptionByFieldAndByText(driver, "Description", description));
         log.info("Verify the attachment added in the current date: " + currentDate);
-        Assertions.assertEquals(dateAdded, getPersonalDetails.getFileDescriptionByFieldAndByText(driver,"Date Added", dateAdded));
+        Assertions.assertEquals(dateAdded, getPersonalDetails.getFileDescriptionByFieldAndByText(driver, "Date Added", dateAdded));
         log.info("Verify the attachment added by the employee username: " + Common_Employee_Login.username);
-        Assertions.assertEquals(addedBy, getPersonalDetails.getFileDescriptionByFieldAndByText(driver,"Added By", addedBy));
+        Assertions.assertEquals(addedBy, getPersonalDetails.getFileDescriptionByFieldAndByText(driver, "Added By", addedBy));
     }
 }
