@@ -10,6 +10,7 @@ public class GlobalConstants {
     public static final String REQUIRED_ERROR_MESSAGE = "Required";
     public static final String INVALID_CREDENTIALS_MESSAGE = "Invalid credentials";
     public static final String TEST_DATA= PROJECT_PATH + File.separator +"src" + File.separator +"main"+File.separator +"resources"+File.separator +"testdata"+ File.separator;
+    public static final String UNMATCHED_CONFIRM_PASSWORD = "Passwords do not match";
     // --- Database ---
     public static final String DB_HOST = "localhost";
     public static final String DB_PORT = "3306";
