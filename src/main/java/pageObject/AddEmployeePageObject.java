@@ -90,18 +90,35 @@ public class AddEmployeePageObject extends BasePage {
      * Fills out the "Create Login Details" section with provided credentials.
      *
      * @param username The username to input.
-     * @param password The password to input and confirm.
+     * @param password The password to input
+     * @param confirmPassword The password to confirm.
      */
+    @Step("Fill Login Details: Username={username}, Password={password}, Confirm Password={confirmPassword}")
     public void createLoginDetails(String username, String password, String confirmPassword){
+        log.info("Input username with value: " + username);
         inputToTextBoxByText(driver, "Username", username);
+        log.info("Input Password Name with value: " + password);
         inputToTextBoxByText(driver, "Password", password);
+        log.info("Input Confirm Password Name with value: " + confirmPassword);
         inputToTextBoxByText(driver, "Confirm Password", confirmPassword);
     }
+    /**
+     * Enter employee information into the form.
+     *
+     * @param firstName   employee first name
+     * @param middleName  employee middle name
+     * @param lastName    employee last name
+     * @param employeeID  employee ID
+     */
+    @Step("Fill employee info: FirstName={firstName}, MiddleName={middleName}, LastName={lastName}, EmployeeID={employeeID}")
     public void fillEmployeeInformation(String firstName, String middleName, String lastName, String employeeID){
+        log.info("Input First Name with value: " + firstName);
         inputEmployeeInformationByName("firstName", firstName);
+        log.info("Input Middle Name with value: " + middleName);
         inputEmployeeInformationByName("middleName", middleName);
+        log.info("Input Last Name with value: " + lastName);
         inputEmployeeInformationByName("lastName", lastName);
+        log.info("Input Employee ID with value: " + employeeID);
         inputToTextBoxByText(driver, "Employee Id", employeeID);
     }
-
 }
