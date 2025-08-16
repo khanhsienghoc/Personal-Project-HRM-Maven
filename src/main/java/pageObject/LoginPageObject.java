@@ -60,7 +60,7 @@ public class LoginPageObject extends BasePage {
      * @param username The username to input.
      * @param password The password to input.
      */
-    @Step("Login with username '{0}' and password '{1}'")
+    @Step("Login with username '{0}' and password '{1}' and click Login button")
     public void login(String username, String password) {
         Map<String, String> fields
                 = new HashMap<String, String>();
