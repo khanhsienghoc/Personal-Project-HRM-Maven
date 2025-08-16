@@ -10,7 +10,7 @@ public class PersonalDetailsData {
     private String maritalStatus;
     private String gender;
     private String bloodType;
-    public PersonalDetailsData() {}
+    private String employeeID;
 
     /**
      * Constructor with all fields
@@ -28,11 +28,11 @@ public class PersonalDetailsData {
         this.gender = gender;
         this.bloodType = bloodType;
     }
-
-    public PersonalDetailsData(String firstName, String middleName, String lastName) {
+    public PersonalDetailsData(String firstName, String middleName, String lastName, String employeeID) {
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
+        this.employeeID = employeeID;
     }
 
     // Getters and Setters

@@ -5,6 +5,11 @@ import interfaces.LoginPageUI;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class LoginPageObject extends BasePage {
     private final WebDriver driver;
     public LoginPageObject(WebDriver driver){
@@ -55,10 +60,18 @@ public class LoginPageObject extends BasePage {
      * @param username The username to input.
      * @param password The password to input.
      */
-    @Step("Login with username '{0}' and password '{1}'")
-    public void login(String username, String password){
-        inputToTextBoxByText(driver, "Username", username);
-        inputToTextBoxByText(driver, "Password", password);
+    @Step("Login with username '{0}' and password '{1}' and click Login button")
+    public void login(String username, String password) {
+        Map<String, String> fields
+                = new HashMap<String, String>();
+        fields.put("Username", username);
+        fields.put("Password", password);
+        for (Map.Entry<String, String> entry : fields.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            log.info("Input " + key + " with value " + value);
+            inputToTextBoxByText(driver, key, value);
+        }
         clickToLoginButton();
     }
 }

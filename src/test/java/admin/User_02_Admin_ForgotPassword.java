@@ -28,7 +28,7 @@ public class User_02_Admin_ForgotPassword extends BaseTest {
     @Parameters({"browser","environment"})
     @BeforeClass
     public void beforeClass(String browserName, String environmentName){
-        log.info("Pre-condition: Open Browser "+ browserName + " and navigate to the URL");
+        log.info("Pre-condition: Open Browser "+ browserName + " and navigate to the URL in " + environmentName + " environment");
         driver = getBrowserDriver(browserName, environmentName);
         loginPage = PageGeneratorManager.getLoginPage(driver);
     }
