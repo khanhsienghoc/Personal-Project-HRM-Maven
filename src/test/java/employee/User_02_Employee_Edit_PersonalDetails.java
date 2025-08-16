@@ -138,7 +138,6 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
             }
             i++;
         }
-
         log.info("Edit_04_Employee_EditPersonalDetail - Step_16: Verify the Nationality dropdown show the latest value: " + testData.getNationality());
         Assertions.assertEquals(testData.getNationality(),getPersonalDetails.getChosenValueFromNationalityDropdownByText("Nationality"));
 
