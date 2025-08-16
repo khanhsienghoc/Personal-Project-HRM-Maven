@@ -213,7 +213,6 @@ public class User_03_Admin_Add_New_Employee extends BaseTest {
             }
         }
     }
-
     @Description("Verify the employee data exist on database")
     @Severity(SeverityLevel.NORMAL)
     @Test()
