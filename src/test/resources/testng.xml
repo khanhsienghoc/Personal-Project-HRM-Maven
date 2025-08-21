@@ -12,10 +12,8 @@
     <test name="Admin Tests">
         <classes>
             <class name="admin.User_01_Admin_Login"/>
-            <!--
             <class name="admin.User_02_Admin_ForgotPassword"/>
             <class name="admin.User_03_Admin_Add_New_Employee"/>
-            -->
         </classes>
     </test>
 
@@ -23,9 +21,7 @@
         <classes>
             <class name="common.Common_Employee_Login"/>
             <class name="employee.User_01_Employee_Login"/>
-            <!--
            <class name="employee.User_02_Employee_Edit_PersonalDetails"/>
-               -->
        </classes>
    </test>
 </suite>
