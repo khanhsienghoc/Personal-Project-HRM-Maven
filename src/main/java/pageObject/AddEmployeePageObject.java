@@ -13,7 +13,6 @@ public class AddEmployeePageObject extends BasePage {
 
     public AddEmployeePageObject(WebDriver driver){
         this.driver = driver;
-
     }
     /**
      * Inputs value into a textbox identified by its name attribute.
