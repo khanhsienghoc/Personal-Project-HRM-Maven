@@ -45,9 +45,6 @@ public class BasePage {
     protected void forwardToPage(WebDriver driver) {
         driver.navigate().forward();
     }
-    protected void refreshPage(WebDriver driver) {
-        driver.navigate().refresh();
-    }
     protected Alert waitForAlertPresence(WebDriver driver) {
         WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
         return explicitWait.until(ExpectedConditions.alertIsPresent());
