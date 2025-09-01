@@ -4,6 +4,7 @@
         <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
         <listener class-name="reportConfigs.MethodListener"/>
         <listener class-name="reportConfigs.AllureTestListener"/>
+        <listener class-name="retryConfigs.RetryListener"/>
     </listeners>
 
     <parameter name="browser" value="chrome"/>

@@ -216,19 +216,19 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
         log.info("Edit_08_Employee_EditAttachments - Step_01: Click to the Edit button");
         getPersonalDetails.clickToActionAttachment(driver, fileLessThan1MB, "pencil");
 
-        log.info("Edit_08_Employee_EditAttachments - Step_2: Upload attachment name: " + txtFile);
+        log.info("Edit_08_Employee_EditAttachments - Step_02: Upload attachment name: " + txtFile);
         getPersonalDetails.addAttachment(driver, txtFile);
 
-        log.info("Edit_08_Employee_EditAttachments - Step_2: Add Comment with value: "+updatedComment );
+        log.info("Edit_08_Employee_EditAttachments - Step_03: Add Comment with value: "+updatedComment );
         getPersonalDetails.inputToCommentTextArea(driver, updatedComment);
 
-        log.info("Edit_08_Employee_EditAttachments - Step_3: Click Save button");
+        log.info("Edit_08_Employee_EditAttachments - Step_04: Click Save button");
         getPersonalDetails.clickOnButtonByHeaderAndByButtonText(driver, "Edit Attachment", "Save");
 
-        log.info("Edit_08_Employee_EditAttachments - Step_4: Verify a success pop up show");
+        log.info("Edit_08_Employee_EditAttachments - Step_05: Verify a success pop up show");
         Assertions.assertTrue(getPersonalDetails.isSuccessPopUpShow(driver));
 
-        log.info("Edit_08_Employee_EditAttachments - Step_5: Verify the attachment information after uploaded");
+        log.info("Edit_08_Employee_EditAttachments - Step_06: Verify the attachment information after uploaded");
         verifyAttachment(txtFile, updatedComment, currentDate, Common_Employee_Login.username);
 
     }
@@ -239,13 +239,13 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
         log.info("Edit_09_Employee_DeleteAnAttachment - Step_01: Click to the Delete button of the attachment name: "+ txtFile );
         getPersonalDetails.clickToActionAttachment(driver, txtFile, "trash");
 
-        log.info("Edit_09_Employee_DeleteAnAttachment - Step_01: Click to the Yes, Delete button");
+        log.info("Edit_09_Employee_DeleteAnAttachment - Step_02: Click to the Yes, Delete button");
         getPersonalDetails.clickCancelOrDeleteInConfirmDeletePopup(driver,"Yes, Delete");
 
-        log.info("Edit_09_Employee_DeleteAnAttachment - Step_4: Verify a success pop up show");
+        log.info("Edit_09_Employee_DeleteAnAttachment - Step_03: Verify a success pop up show");
         Assertions.assertTrue(getPersonalDetails.isSuccessPopUpShow(driver));
 
-        log.info("Edit_09_Employee_DeleteAnAttachment - Step_4: Verify the attachment disappear");
+        log.info("Edit_09_Employee_DeleteAnAttachment - Step_04: Verify the attachment disappear");
         Assertions.assertTrue(getPersonalDetails.getListAttachmentSizeByFieldAndText(driver,"File Name", txtFile) < 1);
         Assertions.assertTrue(getPersonalDetails.getListAttachmentSizeByFieldAndText(driver,"Description", updatedComment) < 1);
     }

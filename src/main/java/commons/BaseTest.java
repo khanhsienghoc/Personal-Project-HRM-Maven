@@ -13,12 +13,13 @@ import org.testng.Reporter;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
 import reportConfigs.VerificationFailures;
+import retryConfigs.RetryListener;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Random;
 
-@Listeners(reportConfigs.AllureTestListener.class)
+@Listeners({reportConfigs.AllureTestListener.class,RetryListener.class})
 public class BaseTest {
     private WebDriver driver;
     protected final Logger log = LoggerFactory.getLogger(getClass());

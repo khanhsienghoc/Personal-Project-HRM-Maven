@@ -226,6 +226,7 @@ public class User_03_Admin_Add_New_Employee extends BaseTest {
     }
     @AfterClass(alwaysRun = true)
     public void afterClass(){
+        log.info("Cleaning up: Closing browser and driver");
         closeBrowserAndDriver();
     }
     private WebDriver driver;

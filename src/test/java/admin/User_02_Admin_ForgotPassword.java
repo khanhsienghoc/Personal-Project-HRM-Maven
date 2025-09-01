@@ -79,6 +79,7 @@ public class User_02_Admin_ForgotPassword extends BaseTest {
     }
     @AfterTest
     public void afterTest(){
+        log.info("Cleaning up: Closing browser and driver");
         closeBrowserAndDriver();
     }
     private WebDriver driver;
