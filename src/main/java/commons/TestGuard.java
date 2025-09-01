@@ -12,7 +12,6 @@ public class TestGuard {
             throw new SkipException("❌ Skipping test: DB test is disabled in TEST environment");
         }
     }
-
     private static void logSkipReasonToConsole() {
         System.out.println("⚠️ [TestGuard] Skipped DB test due to ENV = TEST");
     }

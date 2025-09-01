@@ -28,7 +28,6 @@ public class EmployeeDataAccess {
             return false;
         }
     }
-
     public boolean isEmployeeUpdatedData(String firstName, String middleName, String lastName) {
         String query = "SELECT 1 FROM `hs_hr_employee` where emp_firstname = ? and emp_middle_name = ? and emp_lastname = ?";
         try (ResultSet rs = dbHelper.executeQuery(query, firstName, middleName, lastName)) {

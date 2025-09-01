@@ -174,13 +174,11 @@ public class BasePage {
     }
     protected void selectItemInCustomDropDown(WebDriver driver, String parentLocator, String childLocator, String expectValue) {
         getElement(driver, parentLocator).click();
-        sleepInSecond(1);
         WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
         List<WebElement> allItems = explicitWait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(getBylocatorType(childLocator)));
         for (WebElement item : allItems) {
             if (item.getText().equals(expectValue)) {
                 scrollToElement(driver, item);
-                sleepInSecond(1);
                 item.click();
                 break;
             }
@@ -188,13 +186,11 @@ public class BasePage {
     }
     protected void selectItemInCustomDropDown(WebDriver driver, String parentLocator, String childLocator, String expectValue, String... dynamicValue) {
         getElement(driver, getDynamicXpath(parentLocator, dynamicValue)).click();
-        sleepInSecond(1);
         WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
         List<WebElement> allItems = explicitWait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(getBylocatorType(getDynamicXpath(childLocator, dynamicValue))));
         for (WebElement item : allItems) {
             if (item.getText().equals(expectValue)) {
                 scrollToElement(driver, item);
-                sleepInSecond(1);
                 item.click();
                 break;
             }
@@ -237,7 +233,6 @@ public class BasePage {
     }
     protected void checkTheCheckBox(WebDriver driver, String locatorType, String... dynamicValue) {
         if (!isElementSelected(driver, getDynamicXpath(locatorType, dynamicValue))) {
-            //getElement(driver, getDynamicXpath(locatorType, dynamicValue)).click();
             clickToElementByJS(driver, getDynamicXpath(locatorType, dynamicValue));
         }
     }
@@ -336,7 +331,6 @@ public class BasePage {
         WebElement element = getElement(driver, locatorType);
         String originalStyle = element.getDomProperty("style");
         jsExecutor.executeScript("arguments[0].setAttribute('style', arguments[1])", element, "border: 2px solid red; border-style: dashed;");
-        sleepInSecond(2);
         jsExecutor.executeScript("arguments[0].setAttribute('style', arguments[1])", element, originalStyle);
     }
     protected void scrollToElementOnTopByJS(WebDriver driver, String locatorType) {
@@ -444,13 +438,6 @@ public class BasePage {
             return true;
         } catch (Exception e) {
             return false;
-        }
-    }
-    public void sleepInSecond(long time) {
-        try {
-            Thread.sleep(time * 1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
     public void refreshCurrentPage(WebDriver driver) {
