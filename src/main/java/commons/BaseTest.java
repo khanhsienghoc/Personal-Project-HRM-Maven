@@ -1,8 +1,5 @@
 package commons;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -16,13 +13,10 @@ import org.testng.Reporter;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
 import reportConfigs.VerificationFailures;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.time.Duration;
 import java.util.Random;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Listeners(reportConfigs.AllureTestListener.class)
 public class BaseTest {
@@ -36,28 +30,22 @@ public class BaseTest {
     protected WebDriver getBrowserDriver(String browserName, String envName){
         BrowserList browserList = BrowserList.valueOf(browserName.toUpperCase());
         if(browserList == BrowserList.CHROME){
-            WebDriverManager.chromedriver().setup();
             driver = new ChromeDriver();
         } else if(browserList == BrowserList.HEADLESS_CHROME){
-            WebDriverManager.chromedriver().setup();
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--headless");
             options.addArguments("window-size=1920x1080");
             driver = new ChromeDriver(options);
         } else if (browserList == BrowserList.FIREFOX) {
-            WebDriverManager.firefoxdriver().setup();
             driver =new FirefoxDriver();
         } else if (browserList == BrowserList.HEADLESS_FIREFOX) {
-            WebDriverManager.firefoxdriver().setup();
             FirefoxOptions options = new FirefoxOptions();
             options.addArguments("--headless");
             options.addArguments("window-size=1920x1080");
             driver = new FirefoxDriver(options);
         } else if(browserList == BrowserList.EDGE) {
-            WebDriverManager.edgedriver().setup();
             driver = new EdgeDriver();
         } else if(browserList == BrowserList.HEADLESS_EDGE){
-            WebDriverManager.edgedriver().setup();
             EdgeOptions options = new EdgeOptions();
             options.addArguments("--headless");
             options.addArguments("window-size=1920x1080");
@@ -65,7 +53,7 @@ public class BaseTest {
         }else {
             throw new exception.BrowserNotSupport(browserName);
         }
-        driver.manage().timeouts().implicitlyWait(GlobalConstants.LONG_TIMEOUT, SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(GlobalConstants.LONG_TIMEOUT));
         driver.manage().window().maximize();
         GlobalConstants.ENV = EnvironmentList.valueOf(envName.toUpperCase());
         String baseUrl = EnvironmentConfigManager.getInstance().getBaseUrl();
@@ -75,11 +63,6 @@ public class BaseTest {
     public WebDriver getDriverInstance() {
         return this.driver;
     }
-    @Step("{0}")
-    protected void logStep(String message) {
-        log.info(message);
-    }
-
     protected int randomNum(){
         Random rand = new Random();
         return rand.nextInt(9999999);
@@ -97,7 +80,6 @@ public class BaseTest {
         }
         return pass;
     }
-
     protected boolean checkFalse(boolean condition) {
         boolean pass = true;
         try {
@@ -111,7 +93,6 @@ public class BaseTest {
         }
         return pass;
     }
-
     protected boolean checkEquals(Object actual, Object expected) {
         boolean pass = true;
         try {

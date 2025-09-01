@@ -5,20 +5,21 @@ import commons.BaseTest;
 import io.qameta.allure.Description;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.testng.AllureTestNg;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import pageObject.DashboardPageObject;
 import pageObject.LoginPageObject;
 import pageObject.PageGeneratorManager;
+import reportConfigs.AllureTestListener;
 import ultilities.DataUltilities;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Listeners({AllureTestNg.class, AllureTestListener.class})
+@Test(groups = {"employee"})
 public class User_01_Employee_Login extends BaseTest {
     @Parameters({"browser","environment"})
     @BeforeClass

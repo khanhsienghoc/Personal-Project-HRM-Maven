@@ -5,9 +5,7 @@ import interfaces.LoginPageUI;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class LoginPageObject extends BasePage {

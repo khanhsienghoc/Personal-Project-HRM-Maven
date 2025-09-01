@@ -13,7 +13,7 @@
     <webdrivermanager.version>6.0.0</webdrivermanager.version>
     <testng.version>7.11.0</testng.version>
     <jackson.version>2.19.0</jackson.version>
-    <webdriver.version>4.29.0</webdriver.version>
+    <webdriver.version>4.35.0</webdriver.version>
     <maven.compiler.source>9</maven.compiler.source>
     <maven.compiler.target>9</maven.compiler.target>
   </properties>
@@ -145,11 +145,6 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>${webdriver.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-devtools-v132</artifactId>
       <version>${webdriver.version}</version>
     </dependency>
     <dependency>

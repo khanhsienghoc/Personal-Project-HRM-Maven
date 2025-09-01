@@ -2,7 +2,9 @@ package employee;
 
 import common.Common_Employee_Login;
 import commons.BaseTest;
+import dataAccessObject.EmployeeDataAccess;
 import dataObject.PersonalDetailsData;
+import database.BaseDBHelper;
 import io.qameta.allure.Description;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
@@ -14,9 +16,14 @@ import pageObject.*;
 import reportConfigs.AllureTestListener;
 import ultilities.DataUltilities;
 
+import java.sql.SQLException;
 import java.util.*;
 
+import static commons.TestGuard.skipIfDBDisabled;
+
 @Listeners({AllureTestNg.class, AllureTestListener.class})
+@Test(groups = {"employee"})
+
 public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
     @Parameters({"browser","environment"})
     @BeforeClass
@@ -292,6 +299,16 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
             Assertions.assertTrue(getPersonalDetails.getListAttachmentSizeByFieldAndText(driver,"File Name", file) < 1);
         }
     }
+    @Description("Verify the employee data updated on database")
+    @Severity(SeverityLevel.NORMAL)
+    @Test()
+    public void Edit_11_Employee_UpdatedInformationOnDatabase() throws SQLException {
+        skipIfDBDisabled();
+        BaseDBHelper.connect();
+        log.info("Admin_AddNewEmployee_08_IsEmployeeExist - Step_01 - Verify the employee record exists in database with employee with employee name: "+ testData.getFirstName());
+        boolean isExist = employeeDAo.isEmployeeUpdatedData(testData.getFirstName(), testData.getMiddleName(), testData.getLastName());
+        Assertions.assertTrue(isExist, "Employee record does NOT exist in the database!");
+    }
     @AfterClass (alwaysRun = true)
     public void afterClass(){
         closeBrowserAndDriver();
@@ -311,6 +328,7 @@ public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
     String jpegImage = "JpegImage.jpeg";
     String pngImage = "PngImage.png";
     String xlsxFile = "XlsxFile.xlsx";
+    EmployeeDataAccess employeeDAo = new EmployeeDataAccess();
 
     private void verifyAttachment(String fileName, String description, String dateAdded, String addedBy) {
         log.info("Verify the attachment name after uploaded");

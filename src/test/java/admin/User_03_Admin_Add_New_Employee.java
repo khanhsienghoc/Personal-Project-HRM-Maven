@@ -23,6 +23,7 @@ import java.util.*;
 import static commons.TestGuard.skipIfDBDisabled;
 
 @Listeners({AllureTestNg.class, AllureTestListener.class})
+@Test(groups = {"admin"})
 public class User_03_Admin_Add_New_Employee extends BaseTest {
     @Parameters({"browser","environment"})
     @BeforeClass

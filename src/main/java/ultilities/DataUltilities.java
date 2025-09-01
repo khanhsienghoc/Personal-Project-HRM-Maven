@@ -82,7 +82,7 @@ public class DataUltilities {
             nationalityList = Files.readAllLines(Paths.get(GlobalConstants.TEST_DATA + "Nationalities.txt"));
         } catch (IOException e) {
             e.printStackTrace();
-            nationalityList = Arrays.asList("Afghan"); // fallback
+            nationalityList = Arrays.asList("Afghan");
         }
     }
     public String getNationality() {
