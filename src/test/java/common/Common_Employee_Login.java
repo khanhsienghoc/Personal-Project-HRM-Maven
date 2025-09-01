@@ -5,20 +5,18 @@ import commons.EnvironmentConfigManager;
 import io.qameta.allure.testng.AllureTestNg;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.Parameters;
+import org.testng.annotations.*;
 import pageObject.*;
 import reportConfigs.AllureTestListener;
 import ultilities.DataUltilities;
 
 @Listeners({AllureTestNg.class, AllureTestListener.class})
 public class Common_Employee_Login extends BaseTest {
+    @Test(groups = {"createEmployee"})
     @Parameters({"browser","environment"})
     @BeforeTest
     public void beforeClass(String browserName, String environmentName) {
-        log.info("Pre-condition: Open Browser "+ browserName + " and navigate to the URL in " + environmentName + " environment");
+        log.info("Pre-condition: Open Browser " + browserName + " and navigate to the URL in " + environmentName + " environment");
 
         driver = getBrowserDriver(browserName, environmentName);
         config = EnvironmentConfigManager.getInstance();

@@ -16,6 +16,7 @@ import pageObject.ResetPasswordPageObject;
 import reportConfigs.AllureTestListener;
 
 @Listeners({AllureTestNg.class, AllureTestListener.class})
+@Test(groups = {"admin"})
 public class User_02_Admin_ForgotPassword extends BaseTest {
 
     private static final String RESET_PASSWORD_TITLE = "Reset Password";

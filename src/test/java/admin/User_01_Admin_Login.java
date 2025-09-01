@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Listeners({AllureTestNg.class, AllureTestListener.class})
+@Test(groups = {"admin"})
 public class User_01_Admin_Login extends BaseTest {
     @Parameters({"browser","environment"})
     @BeforeClass

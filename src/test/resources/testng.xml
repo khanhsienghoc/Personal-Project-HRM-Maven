@@ -8,20 +8,26 @@
 
     <parameter name="browser" value="chrome"/>
     <parameter name="environment" value="test"/>
-
-    <test name="Admin Tests">
-        <classes>
-            <class name="admin.User_01_Admin_Login"/>
-            <class name="admin.User_02_Admin_ForgotPassword"/>
-            <class name="admin.User_03_Admin_Add_New_Employee"/>
-        </classes>
-    </test>
-
+        <test name="Admin Tests">
+            <groups>
+                <run>
+                    <include name ="admin"/>
+                </run>
+            </groups>
+            <packages>
+                <package name="admin"></package>
+            </packages>
+        </test>
     <test name="Employee Tests">
-        <classes>
-            <class name="common.Common_Employee_Login"/>
-            <class name="employee.User_01_Employee_Login"/>
-           <class name="employee.User_02_Employee_Edit_PersonalDetails"/>
-       </classes>
-   </test>
+        <groups>
+            <run>
+                <include name="createEmployee"/>
+                <include name="employee"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="common"/>
+            <package name="employee"></package>
+        </packages>
+    </test>
 </suite>

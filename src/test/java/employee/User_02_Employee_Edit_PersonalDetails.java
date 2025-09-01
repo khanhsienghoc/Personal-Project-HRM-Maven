@@ -17,6 +17,8 @@ import ultilities.DataUltilities;
 import java.util.*;
 
 @Listeners({AllureTestNg.class, AllureTestListener.class})
+@Test(groups = {"employee"})
+
 public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
     @Parameters({"browser","environment"})
     @BeforeClass
