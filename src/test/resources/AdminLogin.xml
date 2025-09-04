@@ -2,8 +2,9 @@
 <suite name="Admin- Login Test Suite">
     <listeners>
         <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
-        <listener class-name="reportConfigs.MethodListener"></listener>
-        <listener class-name="reportConfigs.AllureTestListener"></listener>
+        <listener class-name="reportConfigs.MethodListener"/>
+        <listener class-name="reportConfigs.AllureTestListener"/>
+        <listener class-name="retryConfigs.RetryListener"/>
     </listeners>
     <test name="Run on chrome">
         <parameter name="browser" value="chrome"/>

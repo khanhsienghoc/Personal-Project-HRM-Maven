@@ -4,21 +4,25 @@ import commons.BasePage;
 import interfaces.LoginPageUI;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
+import ultilities.Waiter;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class LoginPageObject extends BasePage {
     private final WebDriver driver;
+    private Waiter waiter;
     public LoginPageObject(WebDriver driver){
+        super(driver);
         this.driver = driver;
+        this.waiter = new Waiter(driver);
     }
     /**
      * Clicks on the Login button.
      */
     @Step("Click Login button")
     public void clickToLoginButton(){
-        waitForElementClickable(driver, LoginPageUI.LOGIN_BUTTON);
+        waiter.waitForElementToBeClickable(LoginPageUI.LOGIN_BUTTON);
         clickToElement(driver, LoginPageUI.LOGIN_BUTTON);
     }
     /**
@@ -28,7 +32,7 @@ public class LoginPageObject extends BasePage {
      */
     @Step("Click 'Forgot your password?'")
     public ResetPasswordPageObject clickForgotPasswordHyperlink(){
-        waitForElementClickable(driver, LoginPageUI.FORGOT_PASSWORD_HYPERLINK);
+        waiter.waitForElementToBeClickable(LoginPageUI.FORGOT_PASSWORD_HYPERLINK);
         clickToElement(driver, LoginPageUI.FORGOT_PASSWORD_HYPERLINK);
         return PageGeneratorManager.getResetPassPage(driver);
     }
@@ -39,7 +43,7 @@ public class LoginPageObject extends BasePage {
      */
     @Step("Check if login failed error message is displayed")
     public boolean isLoginFailedErrorMessage(){
-        waitElementVisible(driver, LoginPageUI.INVALID_CREDENTIALS_ERROR_MESSAGE);
+        waiter.waitForVisibilityOfElement(LoginPageUI.INVALID_CREDENTIALS_ERROR_MESSAGE);
         return isElementDisplayed(driver, LoginPageUI.INVALID_CREDENTIALS_ERROR_MESSAGE);
     }
     /**
@@ -49,7 +53,7 @@ public class LoginPageObject extends BasePage {
      */
     @Step("Get the login failed error message text")
     public String getErrorText(){
-        waitElementVisible(driver, LoginPageUI.INVALID_CREDENTIALS_ERROR_MESSAGE);
+        waiter.waitForVisibilityOfElement(LoginPageUI.INVALID_CREDENTIALS_ERROR_MESSAGE);
         return getElementText(driver, LoginPageUI.INVALID_CREDENTIALS_ERROR_MESSAGE);
     }
     /**

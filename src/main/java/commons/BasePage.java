@@ -6,10 +6,10 @@ import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.Color;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pageObject.PageGeneratorManager;
+import ultilities.Waiter;
 
 
 import java.time.Duration;
@@ -18,12 +18,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import static ultilities.LocatorHelper.getByLocatorType;
+import static ultilities.LocatorHelper.getDynamicXpath;
+
 
 public class BasePage {
     protected static final Logger log = LogManager.getLogger(BasePage.class);
-
-    public static BasePage BasePageObject() {
-        return new BasePage();
+    private WebDriver driver;
+    private final Waiter waiter;
+    public BasePage(WebDriver driver) {
+        this.driver = driver;
+        this.waiter = new Waiter(driver);
     }
     protected void openURL(WebDriver driver, String url) {
         driver.get(url);
@@ -44,23 +49,6 @@ public class BasePage {
     }
     protected void forwardToPage(WebDriver driver) {
         driver.navigate().forward();
-    }
-    protected Alert waitForAlertPresence(WebDriver driver) {
-        WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
-        return explicitWait.until(ExpectedConditions.alertIsPresent());
-    }
-    protected void acceptAlert(WebDriver driver) {
-        waitForAlertPresence(driver).accept();
-    }
-    protected void dismissAlert(WebDriver driver) {
-        waitForAlertPresence(driver).dismiss();
-    }
-    protected String getAlertText(WebDriver driver) {
-        return waitForAlertPresence(driver).getText();
-    }
-    protected String sendKeyTextToAlert(WebDriver driver, String text) {
-        waitForAlertPresence(driver).sendKeys(text);
-        return text;
     }
     protected void switchToWindowByID(WebDriver driver, String windowID) {
         Set<String> allWindows = driver.getWindowHandles();
@@ -90,39 +78,12 @@ public class BasePage {
             }
             driver.switchTo().window(parentID);
         }
-
-    }
-    private By getBylocatorType(String locatorType) {
-        By by = null;
-        if (locatorType.startsWith("id=") || locatorType.startsWith("ID=") || locatorType.startsWith("Id=")) {
-            by = By.id(locatorType.substring(3));
-        } else if (locatorType.startsWith("class=") || locatorType.startsWith("Class=") || locatorType.startsWith("CLASS=")) {
-            by = By.className(locatorType.substring(6));
-        } else if (locatorType.startsWith("name=") || locatorType.startsWith("Name=") || locatorType.startsWith("NAME=")) {
-            by = By.name(locatorType.substring(5));
-        } else if (locatorType.startsWith("xpath=") || locatorType.startsWith("Xpath=") || locatorType.startsWith("XPATH=")) {
-            by = By.xpath(locatorType.substring(6));
-        } else if (locatorType.startsWith("css=") || locatorType.startsWith("Css=") || locatorType.startsWith("CSS=")) {
-            by = By.cssSelector(locatorType.substring(4));
-        } else {
-            throw new RuntimeException("locatorType type is not support");
-        }
-        return by;
     }
     private WebElement getElement(WebDriver driver, String locatorType) {
-        return driver.findElement(getBylocatorType(locatorType));
-    }
-    public List<WebElement> getListElement(WebDriver driver, String locatorType) {
-        return driver.findElements(getBylocatorType(locatorType));
+        return driver.findElement(getByLocatorType(locatorType));
     }
     public List<WebElement> getListElement(WebDriver driver, String locatorType, String... dynamicValue) {
-        return driver.findElements(getBylocatorType(getDynamicXpath(locatorType, dynamicValue)));
-    }
-    private String getDynamicXpath(String locatorType, String... values) {
-        if (locatorType.startsWith("xpath=") || locatorType.startsWith("Xpath=") || locatorType.startsWith("XPATH=")) {
-            locatorType = String.format(locatorType, (Object[]) values);
-        }
-        return locatorType;
+        return driver.findElements(getByLocatorType(getDynamicXpath(locatorType, dynamicValue)));
     }
     protected void clickToElement(WebDriver driver, String locatorType) {
         getElement(driver, locatorType).click();
@@ -174,8 +135,7 @@ public class BasePage {
     }
     protected void selectItemInCustomDropDown(WebDriver driver, String parentLocator, String childLocator, String expectValue) {
         getElement(driver, parentLocator).click();
-        WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
-        List<WebElement> allItems = explicitWait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(getBylocatorType(childLocator)));
+        List<WebElement> allItems = waiter.waitForVisibilityOfAllElements(childLocator);
         for (WebElement item : allItems) {
             if (item.getText().equals(expectValue)) {
                 scrollToElement(driver, item);
@@ -186,8 +146,7 @@ public class BasePage {
     }
     protected void selectItemInCustomDropDown(WebDriver driver, String parentLocator, String childLocator, String expectValue, String... dynamicValue) {
         getElement(driver, getDynamicXpath(parentLocator, dynamicValue)).click();
-        WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
-        List<WebElement> allItems = explicitWait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(getBylocatorType(getDynamicXpath(childLocator, dynamicValue))));
+        List<WebElement> allItems = waiter.waitForVisibilityOfAllElements(getDynamicXpath(childLocator, dynamicValue));
         for (WebElement item : allItems) {
             if (item.getText().equals(expectValue)) {
                 scrollToElement(driver, item);
@@ -212,7 +171,7 @@ public class BasePage {
         return Color.fromString(rgbaValue).asHex();
     }
     private List<WebElement> findMulipleElements(WebDriver driver, String locatorTypes) {
-        return driver.findElements(getBylocatorType(locatorTypes));
+        return driver.findElements(getByLocatorType(locatorTypes));
     }
     protected int getElementsSize(WebDriver driver, String locatorTypes) {
         return findMulipleElements(driver, locatorTypes).size();
@@ -377,64 +336,9 @@ public class BasePage {
         return (boolean) jsExecutor.executeScript("return arguments[0].complete " + "&& typeof arguments[0].naturalWidth != 'undefined' && arguments[0].naturalWidth > 0",
                 getElement(driver, locatorType));
     }
-    protected void waitElementVisible(WebDriver driver, String locatorType) {
-        waitForPageLoad(driver);
-        WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
-        explicitWait.until(ExpectedConditions.visibilityOfElementLocated(getBylocatorType(locatorType)));
-    }
-    protected void waitElementVisible(WebDriver driver, String locatorType, String... dynamicValues) {
-        waitForPageLoad(driver);
-        WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
-        explicitWait.until(ExpectedConditions.visibilityOfElementLocated(getBylocatorType(getDynamicXpath(locatorType, dynamicValues))));
-    }
-    protected void waitElementPresence(WebDriver driver, String locatorType, String... dynamicValues) {
-        waitForPageLoad(driver);
-        WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
-        explicitWait.until(ExpectedConditions.presenceOfElementLocated(getBylocatorType(getDynamicXpath(locatorType, dynamicValues))));
-    }
-    protected void waitListElementVisible(WebDriver driver, String locatorType) {
-        waitForPageLoad(driver);
-        WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(60));
-        explicitWait.until(ExpectedConditions.visibilityOfAllElements(findMulipleElements(driver, locatorType)));
-    }
-    protected void waitListElementVisible(WebDriver driver, String locatorType, String... dynamicValues) {
-        waitForPageLoad(driver);
-        WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(60));
-        explicitWait.until(ExpectedConditions.visibilityOfAllElements(findMulipleElements(driver, getDynamicXpath(locatorType, dynamicValues))));
-    }
-    protected void waitElementInvisible(WebDriver driver, String locatorType) {
-        waitForPageLoad(driver);
-        WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
-        explicitWait.until(ExpectedConditions.invisibilityOfElementLocated(getBylocatorType(locatorType)));
-    }
-    protected void waitListElementInvisible(WebDriver driver, String locatorType) {
-        waitForPageLoad(driver);
-        WebDriverWait expilicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
-        expilicitWait.until(ExpectedConditions.invisibilityOfAllElements(findMulipleElements(driver, locatorType)));
-    }
-    protected void waitListElementInvisible(WebDriver driver, String locatorType, String...dynamicValue) {
-        waitForPageLoad(driver);
-        WebDriverWait expilicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
-        expilicitWait.until(ExpectedConditions.invisibilityOfAllElements(findMulipleElements(driver, getDynamicXpath(locatorType, dynamicValue))));
-    }
-    protected void waitForElementSelected(WebDriver driver, String locatorType) {
-        waitForPageLoad(driver);
-        WebDriverWait expilicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
-        expilicitWait.until(ExpectedConditions.elementToBeClickable(getBylocatorType(locatorType)));
-    }
-    protected void waitForElementClickable(WebDriver driver, String locatorType) {
-        waitForPageLoad(driver);
-        WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
-        explicitWait.until(ExpectedConditions.elementToBeClickable(getBylocatorType(locatorType)));
-    }
-    protected void waitForElementClickable(WebDriver driver, String locatorType, String... dynamicValues) {
-        WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
-        explicitWait.until(ExpectedConditions.elementToBeClickable(getBylocatorType(getDynamicXpath(locatorType, dynamicValues))));
-    }
     protected boolean isElementClickable(WebDriver driver, String locatorType) {
         try {
-            WebDriverWait explicitWait = new WebDriverWait(driver, Duration.ofSeconds(longTimeOut));
-            explicitWait.until(ExpectedConditions.elementToBeClickable(getBylocatorType(locatorType)));
+            waiter.waitForElementToBeClickable(locatorType);
             return true;
         } catch (Exception e) {
             return false;
@@ -452,7 +356,7 @@ public class BasePage {
      * @param text    The value to input into the textbox.*/
     @Step("In the '{1}' field, input the value '{2}'")
     public void inputToTextBoxByText(WebDriver driver, String textbox, String text) {
-        waitElementVisible(driver, BasePageUI.TEXTBOX_BY_TEXT, textbox);
+        waiter.waitForVisibilityOfElement(BasePageUI.TEXTBOX_BY_TEXT, textbox);
         sendKeyToElement(driver, BasePageUI.TEXTBOX_BY_TEXT, text, textbox);
     }
     /**
@@ -465,8 +369,8 @@ public class BasePage {
     @Step("In the '{1}' field, input the value '{2}'")
     public void inputToTextBoxByName(WebDriver driver, String name, String text) {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-//        waitListElementInvisible(driver, BasePageUI.LOADING_SPINNER);
-        waitElementVisible(driver, BasePageUI.TEXTBOX_BY_NAME, name);
+        waiter.waitForInvisibilityOfListElement(BasePageUI.LOADING_SPINNER);
+        waiter.waitForVisibilityOfElement(BasePageUI.TEXTBOX_BY_NAME, name);
         sendKeyToElement(driver, BasePageUI.TEXTBOX_BY_NAME, text, name);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
     }
@@ -479,7 +383,7 @@ public class BasePage {
      */
     @Step("Get the error message of the '{1}' field")
     public String getErrorMessageByName(WebDriver driver, String name) {
-        waitElementVisible(driver, BasePageUI.ERROR_MESSAGE_BY_TEXTBOX_TEXT, name);
+        waiter.waitForVisibilityOfElement(BasePageUI.ERROR_MESSAGE_BY_TEXTBOX_TEXT, name);
         return getElementText(driver, BasePageUI.ERROR_MESSAGE_BY_TEXTBOX_TEXT, name);
     }
     /**
@@ -494,7 +398,7 @@ public class BasePage {
     @SuppressWarnings("unchecked")
     @Step("Click to the '{1}' tab")
     public <T extends BasePage> T clickToMenuByText(WebDriver driver, String text) {
-        waitElementVisible(driver, BasePageUI.MENU_BY_TEXT, text);
+        waiter.waitForVisibilityOfElement(BasePageUI.MENU_BY_TEXT, text);
         clickToElement(driver, BasePageUI.MENU_BY_TEXT, text);
         if (text.equals("PIM")) {
             return (T) PageGeneratorManager.getPIMPage(driver);
@@ -513,8 +417,8 @@ public class BasePage {
     @Step("Click to '{1}' button")
     public void clickToButtonByText(WebDriver driver, String text){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(GlobalConstants.SHORT_TIMEOUT));
-        waitListElementInvisible(driver, BasePageUI.LOADING_SPINNER);
-        waitForElementClickable(driver, BasePageUI.BUTTON_BY_TEXT, text);
+        waiter.waitForInvisibilityOfListElement(BasePageUI.LOADING_SPINNER);
+        waiter.waitForElementToBeClickable(BasePageUI.BUTTON_BY_TEXT, text);
         clickToElementByJS(driver, BasePageUI.BUTTON_BY_TEXT, text);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(GlobalConstants.LONG_TIMEOUT));
     }
@@ -526,7 +430,7 @@ public class BasePage {
      */
     @Step("Check whether the success pop up show")
     public boolean isSuccessPopUpShow(WebDriver driver){
-        waitElementVisible(driver, BasePageUI.SUCCESS_SAVE_POPUP);
+        waiter.waitForVisibilityOfElement(BasePageUI.SUCCESS_SAVE_POPUP);
         return isElementDisplayed(driver, BasePageUI.SUCCESS_SAVE_POPUP);
     }
     /**
@@ -536,7 +440,7 @@ public class BasePage {
      */
     @Step("Click on Profile Dropdown")
     public void clickOnProfileDropdown(WebDriver driver){
-        waitForElementClickable(driver, BasePageUI.PROFILE_DROPDOWN);
+        waiter.waitForElementToBeClickable(BasePageUI.PROFILE_DROPDOWN);
         clickToElement(driver, BasePageUI.PROFILE_DROPDOWN);
     }
     /**
@@ -547,7 +451,7 @@ public class BasePage {
      */
     @Step("Click '{1}' options in the Profile options dropdown")
     public void clickOnProfileOptionByText(WebDriver driver, String text){
-        waitForElementClickable(driver, BasePageUI.PROFILE_OPTION_BY_TEXT, text);
+        waiter.waitForElementToBeClickable(BasePageUI.PROFILE_OPTION_BY_TEXT, text);
         clickToElementByJS(driver, BasePageUI.PROFILE_OPTION_BY_TEXT, text);
     }
     /**
@@ -560,7 +464,7 @@ public class BasePage {
      */
     @Step("Get '{1}' attribute the '{2}' textbox")
     public String getPropertyOfTextBoxByText(WebDriver driver, String property, String text){
-        waitElementVisible(driver, BasePageUI.TEXTBOX_BY_TEXT, text);
+        waiter.waitForVisibilityOfElement(BasePageUI.TEXTBOX_BY_TEXT, text);
         return getAttributeInDOMByJS(driver, BasePageUI.TEXTBOX_BY_TEXT,property,text);
     }
 
@@ -575,7 +479,7 @@ public class BasePage {
     @Step("Get '{1}' attribute the '{2}' textbox")
     public String getPropertyOfTextBoxByName(WebDriver driver, String property, String name){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(7));
-        waitElementVisible(driver, BasePageUI.TEXTBOX_BY_NAME, name);
+        waiter.waitForVisibilityOfElement(BasePageUI.TEXTBOX_BY_NAME, name);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(GlobalConstants.LONG_TIMEOUT));
         return getAttributeInDOMByJS(driver, BasePageUI.TEXTBOX_BY_NAME,property,name);
     }
@@ -588,7 +492,7 @@ public class BasePage {
      */
     @Step("Verify whether the menu tab name '{1}' displays")
     public boolean isMenuTabDislaysByText(WebDriver driver, String text){
-        waitElementVisible(driver, BasePageUI.MENU_BY_TEXT, text);
+        waiter.waitForVisibilityOfElement(BasePageUI.MENU_BY_TEXT, text);
         return isElementDisplayed(driver, BasePageUI.MENU_BY_TEXT, text);
     }
 
@@ -600,8 +504,8 @@ public class BasePage {
      * @return The actual text content of the header element.
      */
     @Step("Get the Page header of '{1}' page")
-    public String getPageHeaderByText(WebDriver driver, String text){
-        waitElementVisible(driver, BasePageUI.HEADER_PAGE_BY_TEXT, text);
+    public String getPageHeaderByText(WebDriver driver, String text){;
+        waiter.waitForVisibilityOfElement(BasePageUI.HEADER_PAGE_BY_TEXT, text);
         return getElementText(driver, BasePageUI.HEADER_PAGE_BY_TEXT, text);
     }
     /**
@@ -628,8 +532,8 @@ public class BasePage {
     @Step("In the '{1}' dropdown, click on the arrow of the dropdown to show all the dropdown value")
     public void selectValueInDropdownByText(WebDriver driver, String dropdownText, String expectedValue){
         clickToElement(driver, BasePageUI.DROPDOWN_ARROW_BUTTON_BY_TEXT, dropdownText);
-        waitElementVisible(driver, BasePageUI.DROPDOWN_LIST_BOX);
-        waitElementVisible(driver, BasePageUI.DROPDOWN_VALUE_BY_TEXT, expectedValue);
+        waiter.waitForVisibilityOfElement(BasePageUI.DROPDOWN_LIST_BOX);
+        waiter.waitForVisibilityOfElement(BasePageUI.DROPDOWN_VALUE_BY_TEXT, expectedValue);
         clickToElement(driver, BasePageUI.DROPDOWN_VALUE_BY_TEXT, expectedValue);
     }
     /**
@@ -640,7 +544,7 @@ public class BasePage {
      */
    @Step("Click on the radio '{1}' button")
     public void clickToRadioButtonByText(WebDriver driver, String text){
-        waitElementVisible(driver, BasePageUI.RADIO_BUTTON_BY_TEXT, text);
+       waiter.waitForVisibilityOfElement(BasePageUI.RADIO_BUTTON_BY_TEXT, text);
         clickToElement(driver, BasePageUI.RADIO_BUTTON_BY_TEXT, text);
     }
     /**
@@ -652,7 +556,7 @@ public class BasePage {
      */
     @Step("In the header '{1}', click on the '{2}' button")
     public void clickOnButtonByHeaderAndByButtonText(WebDriver driver, String header, String buttonText){
-        waitElementVisible(driver, BasePageUI.BUTTON_BY_HEADER_AND_BUTTON_TEXT, header, buttonText);
+        waiter.waitForVisibilityOfElement( BasePageUI.BUTTON_BY_HEADER_AND_BUTTON_TEXT, header, buttonText);
         clickToElement(driver, BasePageUI.BUTTON_BY_HEADER_AND_BUTTON_TEXT, header, buttonText);
     }
     /**
@@ -664,7 +568,7 @@ public class BasePage {
      */
     @Step("Check whether the radio button name '{1}' is selected")
     public boolean isRadioButtonSelectedByText(WebDriver driver, String text ){
-        waitElementPresence(driver, BasePageUI.CHECKED_RADIO_BUTTON_BY_TEXT,text );
+        waiter.waitForPresenceOfElement( BasePageUI.CHECKED_RADIO_BUTTON_BY_TEXT,text);
         return isElementSelected(driver, BasePageUI.CHECKED_RADIO_BUTTON_BY_TEXT,text);
     }
     /**
@@ -675,7 +579,7 @@ public class BasePage {
      */
     @Step("Upload the attachment with the file name is '{1}'")
     public void addAttachment(WebDriver driver, String fileName){
-        waitElementPresence(driver, BasePageUI.UPLOAD_FILE);
+        waiter.waitForPresenceOfElement(BasePageUI.UPLOAD_FILE);
         uploadOneFile(driver, BasePageUI.UPLOAD_FILE, GlobalConstants.UPLOAD_FILE + fileName);
     }
     /**
@@ -687,8 +591,8 @@ public class BasePage {
     @Step("Input the value '{1}' to the Comment text box of the attachment")
     public void inputToCommentTextArea(WebDriver driver, String value){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(7));
-        waitListElementInvisible(driver, BasePageUI.LOADING_SPINNER);
-        waitElementVisible(driver, BasePageUI.COMMENT_TEXTAREA);
+        waiter.waitForInvisibilityOfListElement(BasePageUI.LOADING_SPINNER);
+        waiter.waitForVisibilityOfElement(BasePageUI.COMMENT_TEXTAREA);
         sendKeyToElement(driver, BasePageUI.COMMENT_TEXTAREA, value);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(GlobalConstants.LONG_TIMEOUT));
     }
@@ -701,7 +605,7 @@ public class BasePage {
      */
     @Step("Check whether the text box with name is '{1}' is enabled")
     public boolean isTextboxEnabledByText(WebDriver driver, String text){
-        waitElementVisible(driver, BasePageUI.TEXTBOX_BY_TEXT, text);
+        waiter.waitForVisibilityOfElement(BasePageUI.TEXTBOX_BY_TEXT, text);
         return isElementEnabled(driver, BasePageUI.TEXTBOX_BY_TEXT, text);
     }
     /**
@@ -713,7 +617,7 @@ public class BasePage {
      */
     @Step("Get the description of the uploaded attachment in the field'{1}' with the value '{2}'")
     public String getFileDescriptionByFieldAndByText(WebDriver driver, String fieldName, String text){
-        waitElementVisible(driver, BasePageUI.UPLOADED_FILE_DESCRIPTION_BY_FIELD_AND_TEXT, fieldName, text);
+        waiter.waitForVisibilityOfElement(BasePageUI.UPLOADED_FILE_DESCRIPTION_BY_FIELD_AND_TEXT, fieldName, text);
         return getElementText(driver, BasePageUI.UPLOADED_FILE_DESCRIPTION_BY_FIELD_AND_TEXT, fieldName,text);
     }
     /**
@@ -725,7 +629,7 @@ public class BasePage {
      */
     @Step("Get the comment of the uploaded attachment in the Description field with the value '{1}'")
     public String getFileCommentByText(WebDriver driver,String text){
-        waitElementVisible(driver, BasePageUI.UPLOADED_FILE_COMMENT_TEXT, text);
+        waiter.waitForVisibilityOfElement(BasePageUI.UPLOADED_FILE_COMMENT_TEXT, text);
         return getElementText(driver, BasePageUI.UPLOADED_FILE_COMMENT_TEXT,text);
     }
     /**
@@ -737,7 +641,7 @@ public class BasePage {
      */
     @Step("Click to the icon to Edit/Delete/Download of the file name '{1}'")
     public void clickToActionAttachment(WebDriver driver, String fileName, String className){
-        waitElementVisible(driver, BasePageUI.EDIT_ATTACHMENT_BY_FILENAME_AND_BUTTONCLASS,fileName, className);
+        waiter.waitForVisibilityOfElement(BasePageUI.EDIT_ATTACHMENT_BY_FILENAME_AND_BUTTONCLASS,fileName, className);
         clickToElement(driver, BasePageUI.EDIT_ATTACHMENT_BY_FILENAME_AND_BUTTONCLASS,fileName, className);
     }
     /**
@@ -748,7 +652,7 @@ public class BasePage {
      */
     @Step("In the Delete Confirm pop up, choose '{1}'")
     public void clickCancelOrDeleteInConfirmDeletePopup(WebDriver driver, String text){
-        waitElementVisible(driver, BasePageUI.CONFIRM_DELETE_POPUP);
+        waiter.waitForVisibilityOfElement(BasePageUI.CONFIRM_DELETE_POPUP);
         clickToElement(driver, BasePageUI.BUTTON_IN_CONFIRM_DELETE_POPUP_BY_TEXT, text);
     }
     /**
@@ -762,7 +666,7 @@ public class BasePage {
     @Step("Get the Attachment List size of the field name '{1}' and the file name is '{2}'")
     public int getListAttachmentSizeByFieldAndText(WebDriver driver, String field, String text){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
-        waitListElementInvisible(driver, BasePageUI.UPLOADED_FILE_DESCRIPTION_BY_FIELD_AND_TEXT, field, text);
+        waiter.waitForInvisibilityOfListElement(BasePageUI.UPLOADED_FILE_DESCRIPTION_BY_FIELD_AND_TEXT, field, text);
         int size = getElementsSize(driver, BasePageUI.UPLOADED_FILE_DESCRIPTION_BY_FIELD_AND_TEXT, field, text);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(GlobalConstants.LONG_TIMEOUT));
         return size;
@@ -775,7 +679,7 @@ public class BasePage {
      */
     @Step("In every uploaded attachment record, click on the checkbox of the file name is '{1}'")
     public void checkToTheCheckBoxOfAttachment(WebDriver driver, String fileName){
-        waitElementPresence(driver, BasePageUI.CHECKBOX_ATTACHMENT_BY_FILENAME, fileName);
+        waiter.waitForPresenceOfElement(BasePageUI.CHECKBOX_ATTACHMENT_BY_FILENAME, fileName);
         checkTheCheckBox(driver, BasePageUI.CHECKBOX_ATTACHMENT_BY_FILENAME, fileName);
     }
     /**
@@ -786,7 +690,7 @@ public class BasePage {
      */
     @Step("Check whether the 'Delete Selected' button show up")
     public boolean isDeleteSelectedButtonDisplay(WebDriver driver){
-        waitElementVisible(driver, BasePageUI.DELETE_SELECTED_BUTTON);
+        waiter.waitForVisibilityOfElement(BasePageUI.DELETE_SELECTED_BUTTON);
         return isElementDisplayed(driver, BasePageUI.DELETE_SELECTED_BUTTON);
     }
     /**
@@ -796,7 +700,7 @@ public class BasePage {
      */
     @Step("After check on the checkbox of the uploaded attachments, a Delete Selected button show, click on the button")
     public void clickOnDeleteSelectedButton(WebDriver driver){
-        waitElementVisible(driver, BasePageUI.DELETE_SELECTED_BUTTON);
+        waiter.waitForVisibilityOfElement(BasePageUI.DELETE_SELECTED_BUTTON);
         clickToElement(driver, BasePageUI.DELETE_SELECTED_BUTTON);
     }
     /**
@@ -807,7 +711,7 @@ public class BasePage {
      */
     @Step("Get number of uploaded attachments")
     public String getNumberOfUploadedAttachment(WebDriver driver){
-        waitElementVisible(driver, BasePageUI.NUMBER_OF_UPLOADED_ATTACHMENT);
+        waiter.waitForVisibilityOfElement(BasePageUI.NUMBER_OF_UPLOADED_ATTACHMENT);
         return getElementText(driver, BasePageUI.NUMBER_OF_UPLOADED_ATTACHMENT);
     }
 }

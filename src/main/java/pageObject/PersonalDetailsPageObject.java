@@ -5,12 +5,16 @@ import dataObject.PersonalDetailsData;
 import interfaces.MyInfoPageUI;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
+import ultilities.Waiter;
 
 public class PersonalDetailsPageObject extends BasePage {
     private final WebDriver driver;
+    private final Waiter waiter;
 
     public PersonalDetailsPageObject(WebDriver driver){
+        super(driver);
         this.driver = driver;
+        this.waiter = new Waiter(driver);
     }
     /**
      * Get the selected value from the Nationality dropdown by visible text.
@@ -20,7 +24,8 @@ public class PersonalDetailsPageObject extends BasePage {
      */
     @Step("Get the chosen value from Nationality dropdown by text '{0}'")
     public String getChosenValueFromNationalityDropdownByText(String text){
-        waitElementVisible(driver, MyInfoPageUI.NATIONALITY_CHOSEN_VALUE, text);
+//        waitElementVisible(driver, MyInfoPageUI.NATIONALITY_CHOSEN_VALUE, text);
+        waiter.waitForVisibilityOfElement(MyInfoPageUI.NATIONALITY_CHOSEN_VALUE, text);
         return getElementText(driver, MyInfoPageUI.NATIONALITY_CHOSEN_VALUE, text);
     }
     public void fillPersonalDetailsForm(PersonalDetailsData data) {

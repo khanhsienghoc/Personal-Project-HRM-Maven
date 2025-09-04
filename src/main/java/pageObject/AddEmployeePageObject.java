@@ -5,14 +5,18 @@ import commons.GlobalConstants;
 import interfaces.AddEmployeeUI;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
+import ultilities.Waiter;
 
 import java.time.Duration;
 
 public class AddEmployeePageObject extends BasePage {
     private final WebDriver driver;
+    private Waiter waiter;
 
     public AddEmployeePageObject(WebDriver driver){
+        super(driver);
         this.driver = driver;
+        this.waiter = new Waiter(driver);
     }
     /**
      * Inputs value into a textbox identified by its name attribute.
@@ -22,7 +26,7 @@ public class AddEmployeePageObject extends BasePage {
      */
     @Step("In the field {0}, input the value '{1}'")
     public void inputEmployeeInformationByName(String name, String text){
-        waitElementVisible(driver, AddEmployeeUI.TEXTBOX_BY_NAME, name);
+        waiter.waitForVisibilityOfElement(AddEmployeeUI.TEXTBOX_BY_NAME, name);
         sendKeyToElement(driver, AddEmployeeUI.TEXTBOX_BY_NAME,text, name);
     }
     /**
@@ -30,7 +34,7 @@ public class AddEmployeePageObject extends BasePage {
      */
     @Step("Check the 'Create Login Details' toggle")
     public void checkToCreateLoginDetailsToggle(){
-        waitForElementClickable(driver, AddEmployeeUI.CREATE_LOGIN_DETAILS_TOGGLE);
+        waiter.waitForVisibilityOfElement(AddEmployeeUI.CREATE_LOGIN_DETAILS_TOGGLE);
         clickToElementByJS(driver, AddEmployeeUI.CREATE_LOGIN_DETAILS_TOGGLE);
     }
     /**
@@ -39,7 +43,7 @@ public class AddEmployeePageObject extends BasePage {
      * @param filePath The file path to the image.
      */
     public void uploadEmployeeAvatar(String filePath){
-        waitElementPresence(driver, AddEmployeeUI.UPLOAD_EMPLOYEE_AVATAR);
+        waiter.waitForPresenceOfElement(AddEmployeeUI.UPLOAD_EMPLOYEE_AVATAR);
         uploadOneFile(driver, AddEmployeeUI.UPLOAD_EMPLOYEE_AVATAR, filePath);
     }
     /**
@@ -48,7 +52,7 @@ public class AddEmployeePageObject extends BasePage {
      * @return The error message text.
      */
     public String getErrorMessageForEmployeeAvatar(){
-        waitElementVisible(driver, AddEmployeeUI.UPLOAD_AVATAR_ERROR);
+        waiter.waitForVisibilityOfElement(AddEmployeeUI.UPLOAD_AVATAR_ERROR);
         return getElementText(driver, AddEmployeeUI.UPLOAD_AVATAR_ERROR);
     }
     /**
@@ -57,7 +61,7 @@ public class AddEmployeePageObject extends BasePage {
      * @return {@code true} if image is uploaded; {@code false} otherwise.
      */
     public boolean isEmployeeImageUploaded(){
-        waitElementVisible(driver, AddEmployeeUI.UPLOADED_EMPLOYEE_AVATAR);
+        waiter.waitForVisibilityOfElement(AddEmployeeUI.UPLOADED_EMPLOYEE_AVATAR);
         String src = getAttributeValue(driver, AddEmployeeUI.UPLOADED_EMPLOYEE_AVATAR, "src");
         if (src.startsWith("data:image")){
             return true;
@@ -71,7 +75,7 @@ public class AddEmployeePageObject extends BasePage {
      * @return The error message text.
      */
     public String getErrorMessageOfTextBoxByName(String textboxName){
-        waitElementVisible(driver, AddEmployeeUI.ERROR_MESSAGE_BY_NAME,textboxName );
+        waiter.waitForVisibilityOfElement(AddEmployeeUI.ERROR_MESSAGE_BY_NAME, textboxName);
         return getElementText(driver, AddEmployeeUI.ERROR_MESSAGE_BY_NAME, textboxName);
     }
     /**

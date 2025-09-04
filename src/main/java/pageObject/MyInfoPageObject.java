@@ -6,15 +6,18 @@ import interfaces.BasePageUI;
 import interfaces.MyInfoPageUI;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
+import ultilities.Waiter;
 
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 public class MyInfoPageObject extends BasePage {
     private final WebDriver driver;
+    private final Waiter waiter;
 
     public MyInfoPageObject(WebDriver driver){
+        super(driver);
         this.driver = driver;
+        this.waiter = new Waiter(driver);
     }
     /**
      * Clicks on the left tab by visible text and navigates to the corresponding page object.
@@ -26,10 +29,10 @@ public class MyInfoPageObject extends BasePage {
     @Step("Click on the left tab with text '{0}'")
     @SuppressWarnings("unchecked")
     public  <T extends BasePage> T  clickOnLeftTabByText(String text){
-        waitElementVisible(driver, MyInfoPageUI.HYPERLINK_LEFT_TAB_BY_TEXT, text);
+        waiter.waitForVisibilityOfElement(MyInfoPageUI.HYPERLINK_LEFT_TAB_BY_TEXT, text);
         clickToElement(driver, MyInfoPageUI.HYPERLINK_LEFT_TAB_BY_TEXT, text);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(GlobalConstants.SHORT_TIMEOUT));
-        waitListElementInvisible(driver, BasePageUI.LOADING_SPINNER);
+        waiter.waitForInvisibilityOfListElement(BasePageUI.LOADING_SPINNER);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(GlobalConstants.LONG_TIMEOUT));
         if (text.equals("Personal Details")) {
             return (T) PageGeneratorManager.getPersonalDetails(driver);
@@ -44,7 +47,7 @@ public class MyInfoPageObject extends BasePage {
      */
     @Step("Get the title text of the left tab with text '{0}'")
     public String getLeftTabTitleByText(String text){
-        waitElementVisible(driver, MyInfoPageUI.HYPERLINK_LEFT_TAB_BY_TEXT, text);
+        waiter.waitForVisibilityOfElement(MyInfoPageUI.HYPERLINK_LEFT_TAB_BY_TEXT, text);
         return getElementText(driver, MyInfoPageUI.HYPERLINK_LEFT_TAB_BY_TEXT, text);
     }
 }
