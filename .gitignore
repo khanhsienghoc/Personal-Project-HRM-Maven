@@ -39,6 +39,7 @@ build/
 
 ###allure result
 allure-results/**
+allure-report/**
 
 ###resources
 # Ignore everything in resources (including subfolders)
@@ -46,3 +47,5 @@ src/test/resources/**
 
 # But keep testng.xml at root of resources
 !src/test/resources/testng.xml
+
+

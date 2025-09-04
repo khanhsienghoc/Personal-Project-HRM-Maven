@@ -7,6 +7,7 @@ public class DashboardPageObject extends BasePage {
     private final WebDriver driver;
 
     public DashboardPageObject(WebDriver driver){
+        super(driver);
         this.driver = driver;
     }
 

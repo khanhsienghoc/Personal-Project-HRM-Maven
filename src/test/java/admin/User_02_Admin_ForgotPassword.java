@@ -77,8 +77,9 @@ public class User_02_Admin_ForgotPassword extends BaseTest {
         Assertions.assertEquals(FOLLOW_LINK_TEXT , resetPasswordPage.getBodyTextOfResetPassword("select a new password."),"Success page should provide link follow instruction");
         Assertions.assertEquals(CONTACT_ADMIN_TEXT , resetPasswordPage.getBodyTextOfResetPassword("If the email does not arrive"),"Success page should provide admin contact instruction");
     }
-    @AfterTest
-    public void afterTest(){
+    @AfterClass(alwaysRun = true)
+    public void afterClass(){
+        log.info("Cleaning up: Closing browser and driver");
         closeBrowserAndDriver();
     }
     private WebDriver driver;
