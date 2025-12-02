@@ -33,20 +33,45 @@ public class AllureTestListener implements ITestListener {
     private static void logSkipReasonToConsole() {
             System.out.println("⚠️ Test skipped due to either demo environment or databaseTesting=false");
         }
-    @Override
-    public void onTestFailure(ITestResult result) {
-        Object testClass = result.getInstance();
-        WebDriver driver = ((BaseTest) testClass).getDriverInstance();
-        if (driver != null) {
-            byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+//    @Override
+//    public void onTestFailure(ITestResult result) {
+//        Object testClass = result.getInstance();
+//        WebDriver driver = ((BaseTest) testClass).getDriverInstance();
+//        if (driver != null) {
+//            byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+//
+//            // Add screenshot manually to current test
+//            Allure.getLifecycle().addAttachment("Screenshot on failure", "image/png", "png", screenshot);
+//            System.out.println("✅ Screenshot attached via Allure lifecycle API");
+//        } else {
+//            System.out.println("🚨 WebDriver is null, skipping screenshot.");
+//        }
+//    }
+@Override
+public void onTestFailure(ITestResult result) {
+    Object testClass = result.getInstance();
+    WebDriver driver = ((BaseTest) testClass).getDriverInstance();
 
-            // Add screenshot manually to current test
-            Allure.getLifecycle().addAttachment("Screenshot on failure", "image/png", "png", screenshot);
-            System.out.println("✅ Screenshot attached via Allure lifecycle API");
-        } else {
-            System.out.println("🚨 WebDriver is null, skipping screenshot.");
-        }
+    if (driver == null) {
+        System.out.println("🚨 WebDriver is null, skipping screenshot.");
+        return;
     }
+
+    try {
+        byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+        Allure.getLifecycle().addAttachment(
+                "Screenshot on failure",
+                "image/png",
+                "png",
+                screenshot
+        );
+        System.out.println("✅ Screenshot attached successfully.");
+    } catch (org.openqa.selenium.NoSuchSessionException e) {
+        System.out.println("🚨 Cannot take screenshot: session is already closed.");
+    } catch (Exception e) {
+        System.out.println("🚨 Unknown screenshot error: " + e.getMessage());
+    }
+}
     @Override
     public void onStart(ITestContext iTestContext) {
         System.out.println("=== TEST SUITE STARTED ===");
