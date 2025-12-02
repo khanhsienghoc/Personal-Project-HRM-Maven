@@ -112,7 +112,6 @@ public class User_01_Admin_Login extends BaseTest {
     private LoginPageObject loginPage;
     private DataUltilities fakeData;
     private String invalidUsername, invalidPassword;
-    private String username, password;
     private DashboardPageObject homePage;
     EnvironmentConfigManager config = EnvironmentConfigManager.getInstance();
 }
