@@ -68,7 +68,6 @@ public class User_03_Admin_Add_New_Employee extends BaseTest {
         getAddEmployeePage.clickToButtonByText(driver, "Save");
 
         List<String> fields = Arrays.asList("firstName", "lastName", "Username", "Password","Confirm Password");
-
         int i = 3;
         String actualError;
         String expectedError;
