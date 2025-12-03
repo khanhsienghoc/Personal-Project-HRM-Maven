@@ -2,21 +2,21 @@ pipeline {
     agent any
 
     environment {
-           BASE_URL = "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
-           MAVEN_HOME = tool name: 'Maven 3', type: 'maven'   // Chỉnh theo Maven bạn đã cấu hình trên Jenkins
-       }
+        BASE_URL = "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
+        MAVEN_HOME = tool name: 'Maven 3', type: 'maven'
+    }
 
-       stages {
-           stage('Checkout') {
-               steps {
-                   git branch: 'main', url: 'https://github.com/khanhsienghoc/Personal-Project-HRM-Maven.git'
-               }
-           }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/khanhsienghoc/Personal-Project-HRM-Maven.git'
+            }
+        }
 
         stage('Install Dependencies') {
             steps {
                 bat """
-                    "%MAVEN_HOME%/bin/mvn" clean compile
+                    "%MAVEN_HOME%\\bin\\mvn" clean compile
                 """
             }
         }
@@ -30,14 +30,13 @@ pipeline {
                 )]) {
                     bat """
                         echo Jenkins USERNAME = %USERNAME%
-                        "%MAVEN_HOME%/bin/mvn" test ^
-                            -DbaseUrl=${BASE_URL} ^
-                            -Dusername=%USERNAME% ^
-                            -Dpassword=%PASSWORD%
+                        echo Jenkins PASSWORD length = %PASSWORD%
+                        "%MAVEN_HOME%\\bin\\mvn" test -DbaseUrl=%BASE_URL% -Dusername=%USERNAME% -Dpassword=%PASSWORD%
                     """
                 }
             }
         }
+
         stage('Debug Credentials') {
             steps {
                 withCredentials([usernamePassword(
@@ -46,12 +45,13 @@ pipeline {
                     passwordVariable: 'PASSWORD'
                 )]) {
                     bat """
-                        echo USERNAME=%USERNAME%
-                        echo PASSWORD=%PASSWORD%
+                        echo DEBUG USERNAME = %USERNAME%
+                        echo DEBUG PASSWORD length = %PASSWORD%
                     """
                 }
             }
         }
+
         stage('Allure Report') {
             steps {
                 bat """
