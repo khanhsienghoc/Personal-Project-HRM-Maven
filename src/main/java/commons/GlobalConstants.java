@@ -24,6 +24,8 @@ public class GlobalConstants {
     public static final String LOCAL_ADMIN_PASSWORD = "Admin123456789@";
     // --- Online testing environment ---
     public static final String PORTAL_TESTING_URL ="https://opensource-demo.orangehrmlive.com/web/index.php/auth/login";
-    public static final String TESTING_ADMIN_USERNAME = "Admin";
-    public static final String TESTING_ADMIN_PASSWORD ="admin123";
+//    public static final String TESTING_ADMIN_USERNAME = "Admin";
+//    public static final String TESTING_ADMIN_PASSWORD ="admin123";
+    public static final String TESTING_ADMIN_USERNAME = System.getProperty("username", "Admin");
+    public static final String TESTING_ADMIN_PASSWORD = System.getProperty("password", "admin123");
 }
