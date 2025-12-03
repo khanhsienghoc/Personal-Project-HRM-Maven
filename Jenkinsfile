@@ -2,16 +2,16 @@ pipeline {
     agent any
 
     environment {
-        BASE_URL = "https://staging.example.com"
-        MAVEN_HOME = tool name: 'Maven 3', type: 'maven'
-    }
+           BASE_URL = "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
+           MAVEN_HOME = tool name: 'Maven 3', type: 'maven'   // Chỉnh theo Maven bạn đã cấu hình trên Jenkins
+       }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/your-repo.git'
-            }
-        }
+       stages {
+           stage('Checkout') {
+               steps {
+                   git branch: 'main', url: 'https://github.com/khanhsienghoc/Personal-Project-HRM-Maven.git'
+               }
+           }
 
         stage('Install Dependencies') {
             steps {
