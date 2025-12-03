@@ -18,7 +18,6 @@ import reportConfigs.AllureTestListener;
 @Listeners({AllureTestNg.class, AllureTestListener.class})
 @Test(groups = {"admin"})
 public class User_02_Admin_ForgotPassword extends BaseTest {
-
     private static final String RESET_PASSWORD_TITLE = "Reset Password";
     private static final String SUCCESS_TITLE = "Reset Password link sent successfully";
     private static final String INITIAL_BODY_TEXT = "Please enter your username to identify your account to reset your password";
