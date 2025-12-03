@@ -38,7 +38,20 @@ pipeline {
                 }
             }
         }
-
+        stage('Debug Credentials') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'test-account',
+                    usernameVariable: 'USERNAME',
+                    passwordVariable: 'PASSWORD'
+                )]) {
+                    bat """
+                        echo USERNAME=%USERNAME%
+                        echo PASSWORD=%PASSWORD%
+                    """
+                }
+            }
+        }
         stage('Allure Report') {
             steps {
                 bat """
