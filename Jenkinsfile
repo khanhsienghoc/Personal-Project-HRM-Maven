@@ -20,37 +20,37 @@ pipeline {
                 """
             }
         }
-
-        stage('Run Tests') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'test-account',
-                    usernameVariable: 'USERNAME',
-                    passwordVariable: 'PASSWORD'
-                )]) {
-                    bat """
-                        echo Jenkins USERNAME = %USERNAME%
-                        echo Jenkins PASSWORD length = %PASSWORD%
-                        "%MAVEN_HOME%\\bin\\mvn" test -DbaseUrl=%BASE_URL% -Dusername=%USERNAME% -Dpassword=%PASSWORD%
-                    """
+            stage('Debug Credentials') {
+                    steps {
+                        withCredentials([usernamePassword(
+                            credentialsId: 'test-account',
+                            usernameVariable: 'CI_USER',
+                            passwordVariable: 'CI_PASS'
+                        )]) {
+                            bat """
+                                echo DEBUG USERNAME = %CI_USER%
+                                echo DEBUG PASSWORD length = %CI_PASS%
+                            """
+                        }
+                    }
                 }
-            }
-        }
+       stage('Run Tests') {
+                  steps {
+                      withCredentials([usernamePassword(
+                          credentialsId: 'test-account',
+                          usernameVariable: 'CI_USER',
+                          passwordVariable: 'CI_PASS'
+                      )]) {
+                          bat """
+                              echo DEBUG: USERNAME= %CI_USER%
+                              echo DEBUG: PASSWORD length= %CI_PASS%
+                              "%MAVEN_HOME%\\bin\\mvn" test -DbaseUrl=%BASE_URL% -Dusername=%CI_USER% -Dpassword=%CI_PASS%
+                          """
+                      }
+                  }
+              }
+          }
 
-        stage('Debug Credentials') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'test-account',
-                    usernameVariable: 'USERNAME',
-                    passwordVariable: 'PASSWORD'
-                )]) {
-                    bat """
-                        echo DEBUG USERNAME = %USERNAME%
-                        echo DEBUG PASSWORD length = %PASSWORD%
-                    """
-                }
-            }
-        }
 
         stage('Allure Report') {
             steps {
