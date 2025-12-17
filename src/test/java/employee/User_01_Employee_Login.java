@@ -2,6 +2,7 @@ package employee;
 
 import common.Common_Employee_Login;
 import commons.BaseTest;
+import commons.BaseTestTestNG;
 import io.qameta.allure.Description;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Listeners({AllureTestNg.class, AllureTestListener.class})
 @Test(groups = {"employee"})
-public class User_01_Employee_Login extends BaseTest {
+public class User_01_Employee_Login extends BaseTestTestNG {
     @Parameters({"browser","environment"})
     @BeforeClass
     public void beforeClass(String browserName, String environmentName){

@@ -1,6 +1,7 @@
 package common;
 
 import commons.BaseTest;
+import commons.BaseTestTestNG;
 import commons.EnvironmentConfigManager;
 import io.qameta.allure.testng.AllureTestNg;
 import org.junit.jupiter.api.Assertions;
@@ -11,7 +12,7 @@ import reportConfigs.AllureTestListener;
 import ultilities.DataUltilities;
 
 @Listeners({AllureTestNg.class, AllureTestListener.class})
-public class Common_Employee_Login extends BaseTest {
+public class Common_Employee_Login extends BaseTestTestNG {
     @Test(groups = {"createEmployee"})
     @Parameters({"browser","environment"})
     @BeforeTest

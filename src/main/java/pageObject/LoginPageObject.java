@@ -1,6 +1,7 @@
 package pageObject;
 
 import commons.BasePage;
+import interfaces.BasePageUI;
 import interfaces.LoginPageUI;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
@@ -75,5 +76,10 @@ public class LoginPageObject extends BasePage {
             inputToTextBoxByText(driver, key, value);
         }
         clickToLoginButton();
+    }
+    @Step("Check whether the success pop up show")
+    public boolean isLoginPageShowUp(WebDriver driver){
+        waiter.waitForVisibilityOfElement(BasePageUI.TEXTBOX_BY_NAME,"username");
+        return isElementDisplayed(driver, BasePageUI.TEXTBOX_BY_NAME,"username");
     }
 }

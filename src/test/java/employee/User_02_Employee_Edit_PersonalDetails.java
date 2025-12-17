@@ -2,6 +2,7 @@ package employee;
 
 import common.Common_Employee_Login;
 import commons.BaseTest;
+import commons.BaseTestTestNG;
 import dataAccessObject.EmployeeDataAccess;
 import dataObject.PersonalDetailsData;
 import database.BaseDBHelper;
@@ -24,7 +25,7 @@ import static commons.TestGuard.skipIfDBDisabled;
 @Listeners({AllureTestNg.class, AllureTestListener.class})
 @Test(groups = {"employee"})
 
-public class User_02_Employee_Edit_PersonalDetails extends BaseTest {
+public class User_02_Employee_Edit_PersonalDetails extends BaseTestTestNG {
     @Parameters({"browser","environment"})
     @BeforeClass
     public void beforeClass(String browserName, String environmentName){

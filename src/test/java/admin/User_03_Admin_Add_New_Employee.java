@@ -1,6 +1,7 @@
 package admin;
 
 import commons.BaseTest;
+import commons.BaseTestTestNG;
 import commons.EnvironmentConfigManager;
 import commons.GlobalConstants;
 import dataAccessObject.EmployeeDataAccess;
@@ -24,7 +25,7 @@ import static commons.TestGuard.skipIfDBDisabled;
 
 @Listeners({AllureTestNg.class, AllureTestListener.class})
 @Test(groups = {"admin"})
-public class User_03_Admin_Add_New_Employee extends BaseTest {
+public class User_03_Admin_Add_New_Employee extends BaseTestTestNG {
     @Parameters({"browser","environment"})
     @BeforeClass
     public void beforeClass(String browserName, String environmentName){
